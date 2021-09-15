@@ -11,6 +11,11 @@ namespace Car_Renting.Models
         public int Year { get; set; }
         public bool IsAvailable { get; set; }
 
+        public Car()
+        {
+                
+        }
+
         public Car(int id, string name, string model, string manufacturer, int year)
         {
             Id = id;

@@ -4,7 +4,7 @@ namespace Car_Renting.Models
 {
     public interface ICarRepository
     {
-        public IEnumerable<Car> GetAllCards { get;}
+        public IEnumerable<Car> GetAllCars { get;}
         Car GetCarById(int carId);
     }
 }

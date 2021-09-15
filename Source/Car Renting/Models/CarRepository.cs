@@ -1,14 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Car_Renting.Models
 {
     public class CarRepository : ICarRepository
     {
-        public IEnumerable<Car> GetAllCards => throw new System.NotImplementedException();
+        private readonly AppDbContext _appDbContext;
 
-        public Car GetCarById(int carId)
+        public CarRepository(AppDbContext appDbContext)
         {
-            throw new System.NotImplementedException();
+            _appDbContext = appDbContext;
         }
+
+        public IEnumerable<Car> GetAllCars => _appDbContext.Cars.Include(c => c.Model);
+
+        public Car GetCarById(int carId) => _appDbContext.Cars.FirstOrDefault(c => c.Id == carId);
     }
 }
