@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Car_Renting.Models
@@ -13,7 +12,7 @@ namespace Car_Renting.Models
             _appDbContext = appDbContext;
         }
 
-        public IEnumerable<Car> GetAllCars => _appDbContext.Cars.Include(c => c.Model);
+        public IEnumerable<Car> GetAllCars => _appDbContext.Cars.Select(c => c);
 
         public Car GetCarById(int carId) => _appDbContext.Cars.FirstOrDefault(c => c.Id == carId);
     }

@@ -7,22 +7,22 @@ namespace Car_Renting.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Model { get; set; }
-        public string Manufacturer { get; set; }
-        public int Year { get; set; }
         public bool IsAvailable { get; set; }
+        public int Year { get; set; }
+        public string Manufacturer { get; set; }
 
         public Car()
         {
                 
         }
 
-        public Car(int id, string name, string model, string manufacturer, int year)
+        public Car(int id, string name, string model, int year, string manufacturer)
         {
             Id = id;
             Name = name;
             Model = model;
-            Manufacturer = manufacturer;
             Year = year;
+            Manufacturer = manufacturer;
         }
 
         public void RentCar(Car car, DateTime time)
