@@ -2,6 +2,7 @@ using Car_Renting.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,10 +26,11 @@ namespace Car_Renting
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<ICar, Car>();
 
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddDefaultIdentity<User>().AddEntityFrameworkStores<AppDbContext>();
             services.AddRazorPages();
+
+            services.AddScoped<IdentityDbContext<User>, AppDbContext>();
 
             services.Configure<IdentityOptions>(options =>
             {

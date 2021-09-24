@@ -7,11 +7,9 @@ namespace Car_Renting.Models
     public class Car
     {
         public int Id { get; set; }
-        public string Name { get; set; }
         public string Model { get; set; }
         public int Year { get; set; }
         public string Manufacturer { get; set; }
-        public DateTime? BookedUntilDate { get; set; }
         public List<Booking> Bookings { get; set; }
         public decimal PricePerDay { get; set; }
         public CarStatus Status { get; set; }
@@ -21,10 +19,9 @@ namespace Car_Renting.Models
                 
         }
 
-        public Car(int id, string name, string model, int year, string manufacturer)
+        public Car(int id, string model, int year, string manufacturer)
         {
             Id = id;
-            Name = name;
             Model = model;
             Year = year;
             Manufacturer = manufacturer;

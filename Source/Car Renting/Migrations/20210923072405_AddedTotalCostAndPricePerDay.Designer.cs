@@ -4,14 +4,16 @@ using Car_Renting.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Car_Renting.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210923072405_AddedTotalCostAndPricePerDay")]
+    partial class AddedTotalCostAndPricePerDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,10 +59,16 @@ namespace Car_Renting.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("BookedUntilDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Manufacturer")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PricePerDay")
@@ -75,6 +83,108 @@ namespace Car_Renting.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cars");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Manufacturer = "Audi",
+                            Model = "A6",
+                            Name = "Audi A6",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 1994
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Manufacturer = "BMW",
+                            Model = "X6",
+                            Name = "BMW X6",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2008
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Manufacturer = "Citroen",
+                            Model = "A",
+                            Name = "Citroen A",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2020
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Manufacturer = "Chevrolet",
+                            Model = "Volt",
+                            Name = "Chevrolet Volt",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2011
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Manufacturer = "Chrysler",
+                            Model = "300C Sedan",
+                            Name = "Chrysler Sedan",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2004
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Manufacturer = "Lamborghini",
+                            Model = "Diablo Coupe",
+                            Name = "Lamborghini Diablo",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2000
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Manufacturer = "Kia",
+                            Model = "Optima Sedan",
+                            Name = "Kia Optima",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2018
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Manufacturer = "Jaguar",
+                            Model = "XK Coupe",
+                            Name = "Jaguar XK Coupe",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2011
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Manufacturer = "Porsche",
+                            Model = "Taycan Hatchback",
+                            Name = "Porsche Taycan",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2019
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Manufacturer = "Mitsubishi",
+                            Model = "ASX SUV",
+                            Name = "Mitsubishi ASX SUV",
+                            PricePerDay = 0m,
+                            Status = 0,
+                            Year = 2019
+                        });
                 });
 
             modelBuilder.Entity("Car_Renting.Models.User", b =>
