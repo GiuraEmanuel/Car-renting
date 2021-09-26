@@ -1,49 +1,31 @@
 ﻿@model IEnumerable<Car_Renting.Models.Car>
 
-<table class="table" style="width:100%">
+
+<table class="table" style="width:80%">
     <thead class="thead-light">
         <tr>
-            <th>Id</th>
-            <th>Model</th>
             <th>Manufacturer</th>
+            <th>Model</th>
             <th>Year</th>
+            <th>Price per day</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var car in Model)
         {
             <tr>
-                <td>@car.Id</td>
-                <td>@car.Model</td>
                 <td>@car.Manufacturer</td>
+                <td>@car.Model</td>
                 <td>@car.Year</td>
+                <td>@car.PricePerDay</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="EditVehicle" asp-route-id ="@car.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id ="@car.Id">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
-
-@*<form action="/action_page.php" method="get">
-        <label for="fname">First name:</label>
-        <input type="text" id="fname" name="fname"><br><br>
-        <label for="lname">Last name:</label>
-        <input type="text" id="lname" name="lname"><br><br>
-        <input type="submit" value="Submit">
-    </form>*@
-
-
-<button type="button">Add new entry</button>
-
-<form asp-controller="Admin" asp-action="Add" method="post">
-    <div>
-        <label for="Id">Id:</label>
-        <input type="text" id="id" name="id"><br><br>
-        <label for="Model">Model:</label>
-        <input type="text" id="model" name="model"><br><br>
-        <label for="Manufacturer">Manufacturer:</label>
-        <input type="text" id="manufacturer" name="manufacturer"><br><br>
-        <label for="Year">Year:</label>
-        <input type="text" id="year" name="year"><br><br>
-        <input type="submit" value="Submit">
-    </div>
-</form>
+<a class="btn btn-primary" asp-controller="Admin" asp-action="AddVehicle">Add new entry</a>

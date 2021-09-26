@@ -10,8 +10,8 @@ namespace Car_Renting.Models
         public string Model { get; set; }
         public int Year { get; set; }
         public string Manufacturer { get; set; }
-        public List<Booking> Bookings { get; set; }
         public decimal PricePerDay { get; set; }
+        public List<Booking> Bookings { get; set; }
         public CarStatus Status { get; set; }
 
         public Car()

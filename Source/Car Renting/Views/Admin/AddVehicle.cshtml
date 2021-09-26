@@ -1,0 +1,19 @@
+﻿<form asp-controller="Admin" asp-action="AddVehicle" method="post">
+    <div class="form-group">
+        <label for="Model">Model:</label>
+        <input type="text" id="model" name="model">
+    </div>
+    <div class="form-group">
+        <label for="Manufacturer">Manufacturer:</label>
+        <input type="text" id="manufacturer" name="manufacturer">
+    </div>
+    <div class="form-group">
+        <label for="Year">Year:</label>
+        <input type="number" id="year" name="year">
+    </div>
+    <div class="form-group">
+        <label for="PricePerDay">Price per day:</label>
+        <input type="number" step=".01" id="pricePerDay" name="pricePerDay">
+    </div>
+    <input type="submit" value="Add">
+</form>
