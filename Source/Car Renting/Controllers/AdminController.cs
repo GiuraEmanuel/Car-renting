@@ -1,6 +1,7 @@
 ﻿using Car_Renting.Models;
 using Car_Renting.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Car_Renting.Controllers
@@ -13,9 +14,14 @@ namespace Car_Renting.Controllers
         {
             _appDbContext = appDbContext;
         }
+
         public IActionResult Inventory()
         {
-            return View(_appDbContext.Cars);
+            var cars = _appDbContext.Cars.Select(car => new InventoryViewModel.Car(
+                car.Id, car.Year, car.Manufacturer, car.Model, car.LicensePlate, car.PricePerDay));
+
+            var inventoryViewModel = new InventoryViewModel(cars);
+            return View(inventoryViewModel);
         }
 
         [HttpGet]
@@ -28,13 +34,7 @@ namespace Car_Renting.Controllers
         [HttpPost]
         public IActionResult AddVehicle(AddVehicleViewModel viewModel)
         {
-            var car = new Car
-            {
-                Model = viewModel.Model,
-                Manufacturer = viewModel.Manufacturer,
-                Year = viewModel.Year,
-                PricePerDay = viewModel.PricePerDay
-            };
+            var car = new Car(viewModel.Year, viewModel.Manufacturer, viewModel.Model, viewModel.PricePerDay, viewModel.LicensePlate);
             _appDbContext.Cars.Add(car);
             _appDbContext.SaveChanges();
             return RedirectToAction("Inventory");
@@ -43,19 +43,24 @@ namespace Car_Renting.Controllers
         [HttpGet]
         public IActionResult EditVehicle(int id)
         {
-            var car = _appDbContext.Cars.Single(c => c.Id == id);
-
+            var car = _appDbContext.Cars.SingleOrDefault(c => c.Id == id);
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel { Message = "Car does not exist" });
+                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
             }
-            return View();
+
+            var vmEditVehicle = new EditVehicleViewModel
+            {
+                Id = car.Id,
+                PricePerDay = car.PricePerDay
+            };
+
+            return View(vmEditVehicle);
         }
 
         [HttpPost]
-        public IActionResult EditVehicle(int id ,EditVehiclePriceViewModel editVehiclePriceViewModel)
+        public IActionResult EditVehicle(int id, EditVehicleViewModel editVehiclePriceViewModel)
         {
-            editVehiclePriceViewModel = new EditVehiclePriceViewModel();
             var car = _appDbContext.Cars.Single(c => c.Id == id);
             car.PricePerDay = editVehiclePriceViewModel.PricePerDay;
             _appDbContext.SaveChanges();

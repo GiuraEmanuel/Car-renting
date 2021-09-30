@@ -1,7 +1,8 @@
 ﻿namespace Car_Renting.ViewModels
 {
-    public class EditVehiclePriceViewModel
+    public class EditVehicleViewModel
     {
+        public int Id { get; set; }
         public decimal PricePerDay { get; set; }
     }
 }

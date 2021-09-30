@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-
+#nullable disable
 namespace Car_Renting.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]

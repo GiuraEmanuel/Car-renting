@@ -10,7 +10,8 @@ namespace Car_Renting.Models
 
         }
 
-        public DbSet<Car> Cars { get; set; }
+        public DbSet<Car> Cars => Set<Car>();
+        public DbSet<Booking> Bookings => Set<Booking>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,19 +1,23 @@
 ﻿<form asp-controller="Admin" asp-action="AddVehicle" method="post">
     <div class="form-group">
-        <label for="Model">Model:</label>
-        <input type="text" id="model" name="model">
+        <label for="Year">Year:</label>
+        <input type="number" id="Year" name="Year">
     </div>
     <div class="form-group">
         <label for="Manufacturer">Manufacturer:</label>
-        <input type="text" id="manufacturer" name="manufacturer">
+        <input type="text" id="Manufacturer" name="Manufacturer">
     </div>
     <div class="form-group">
-        <label for="Year">Year:</label>
-        <input type="number" id="year" name="year">
+        <label for="Model">Model:</label>
+        <input type="text" id="Model" name="Model">
+    </div>
+    <div class="form-group">
+        <label for="LicensePlate">License Plate:</label>
+        <input type="text" id="LicensePlate" name="LicensePlate">
     </div>
     <div class="form-group">
         <label for="PricePerDay">Price per day:</label>
-        <input type="number" step=".01" id="pricePerDay" name="pricePerDay">
+        <input type="number" step=".01" id="PricePerDay" name="PricePerDay">
     </div>
     <input type="submit" value="Add">
 </form>

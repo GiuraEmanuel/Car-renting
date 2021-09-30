@@ -1,30 +1,29 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace Car_Renting.Models
 {
-
+    [Index(nameof(LicensePlate), IsUnique = true)]
     public class Car
     {
-        public int Id { get; set; }
-        public string Model { get; set; }
-        public int Year { get; set; }
-        public string Manufacturer { get; set; }
+        public int Id { get; private set; }
+        public int Year { get; private set; }
+        public string Manufacturer { get; private set; }
+        public string Model { get; private set; }
         public decimal PricePerDay { get; set; }
-        public List<Booking> Bookings { get; set; }
+        public string LicensePlate { get; set; }
         public CarStatus Status { get; set; }
+        public List<Booking> Bookings { get; } = new();
 
-        public Car()
+        public Car(int year, string manufacturer, string model, decimal pricePerDay, string licensePlate)
         {
-                
-        }
-
-        public Car(int id, string model, int year, string manufacturer)
-        {
-            Id = id;
-            Model = model;
             Year = year;
             Manufacturer = manufacturer;
+            Model = model;
+            PricePerDay = pricePerDay;
+            LicensePlate = licensePlate;
+            Status = CarStatus.Active;
         }
 
         public void RentCar(Car car, DateTime time)

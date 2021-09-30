@@ -2,9 +2,10 @@
 {
     public class AddVehicleViewModel
     {
-        public string Model { get; set; }
         public int Year { get; set; }
-        public string Manufacturer { get; set; }
+        public string Manufacturer { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public string LicensePlate { get; set; } = string.Empty;
         public decimal PricePerDay { get; set; }
     }
 }

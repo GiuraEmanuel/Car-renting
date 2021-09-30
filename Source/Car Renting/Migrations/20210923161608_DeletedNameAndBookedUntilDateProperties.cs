@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-
+#nullable disable
 namespace Car_Renting.Migrations
 {
     public partial class DeletedNameAndBookedUntilDateProperties : Migration

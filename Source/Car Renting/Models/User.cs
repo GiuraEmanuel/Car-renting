@@ -5,6 +5,6 @@ namespace Car_Renting.Models
 {
     public class User : IdentityUser
     {
-        public List<Booking> Bookings { get; set; }
+        public List<Booking> Bookings { get; } = new();
     }
 }
