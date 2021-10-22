@@ -1,9 +1,11 @@
 ﻿@model EditVehicleViewModel
 
 <form asp-controller="Admin" asp-action="EditVehicle" method="post" asp-route-id="@Model.Id">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <label for="PricePerDay">Price per day:</label>
         <input type="number" value="@Model.PricePerDay" step=".01" id="PricePerDay" name="PricePerDay">
+        <span asp-validation-for="PricePerDay" class="text-danger"></span>
     </div>
     <input type="submit" value="Save">
 </form>
