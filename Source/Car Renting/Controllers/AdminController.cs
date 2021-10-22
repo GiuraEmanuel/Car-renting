@@ -1,10 +1,12 @@
 ﻿using Car_Renting.Models;
 using Car_Renting.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace Car_Renting.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("Admin")]
     public class AdminController : Controller
     {
@@ -14,7 +16,6 @@ namespace Car_Renting.Controllers
         {
             _appDbContext = appDbContext;
         }
-
         [HttpGet("Inventory")]
         public IActionResult Inventory()
         {
