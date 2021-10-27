@@ -2,6 +2,9 @@
 using Car_Renting.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace Car_Renting.Controllers
@@ -49,8 +52,19 @@ namespace Car_Renting.Controllers
                 addVehicleViewModel.Model,
                 addVehicleViewModel.PricePerDay,
                 addVehicleViewModel.LicensePlate);
+
             _appDbContext.Cars.Add(car);
-            _appDbContext.SaveChanges();
+
+            try
+            {
+                _appDbContext.SaveChanges();
+            }
+            catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 } sqlEx && sqlEx.Message.Contains("'IX_Cars_LicensePlate'"))
+            {
+                ModelState.AddModelError("LicensePlate", "A car with the same license plate already exists.");
+                return View();
+            }
+
             return RedirectToAction("Inventory");
         }
 

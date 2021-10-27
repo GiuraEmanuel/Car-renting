@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Threading.Tasks;
 
 namespace Car_Renting
 {
@@ -28,13 +26,15 @@ namespace Car_Renting
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDefaultIdentity<User>()
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<AppDbContext>();
 
-            services.AddDefaultIdentity<User>().AddEntityFrameworkStores<AppDbContext>();
             services.AddRazorPages();
 
             services.AddScoped<IdentityDbContext<User>, AppDbContext>();
 
-          
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -77,7 +77,7 @@ namespace Car_Renting
                 //endpoints.MapControllerRoute(
                 //    name: "default",
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapRazorPages();
+                endpoints.MapRazorPages();
             });
         }
     }
