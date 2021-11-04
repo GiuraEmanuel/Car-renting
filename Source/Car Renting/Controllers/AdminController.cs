@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Car_Renting.Controllers
 {
@@ -19,13 +20,14 @@ namespace Car_Renting.Controllers
         {
             _appDbContext = appDbContext;
         }
+
         [HttpGet("Inventory")]
-        public IActionResult Inventory()
+        public async Task<IActionResult> Inventory()
         {
-            var cars = _appDbContext.Cars
+            var cars = await _appDbContext.Cars
                 .Where(car => car.Status == CarStatus.Active)
                 .Select(car => new InventoryViewModel.Car(car.Id, car.Year, car.Manufacturer, car.Model, car.LicensePlate,
-                 car.PricePerDay));
+                 car.PricePerDay)).ToListAsync();
 
             var inventoryViewModel = new InventoryViewModel(cars);
             return View(inventoryViewModel);
@@ -34,12 +36,53 @@ namespace Car_Renting.Controllers
         [HttpGet("AddVehicle")]
         public IActionResult AddVehicle()
         {
-            AddVehicleViewModel model = new AddVehicleViewModel();
+            var model = new AddVehicleViewModel();
             return View(model);
         }
 
+        [HttpGet("DeleteVehicle/{id}")]
+        public async Task<IActionResult> DeleteVehicle(int id)
+        {
+            var car = await _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefaultAsync();
+
+            if (car == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist."));
+            }
+
+            DeleteVehicleViewModel deleteVehicleViewModel = new()
+            {
+                Id = car.Id,
+                Year = car.Year,
+                Manufacturer = car.Manufacturer,
+                Model = car.Model,
+                LicensePlate = car.LicensePlate,
+                PricePerDay = car.PricePerDay
+            };
+
+            return View(deleteVehicleViewModel);
+        }
+
+        [HttpGet("EditVehicle/{id}")]
+        public async Task<IActionResult> EditVehicle(int id)
+        {
+            var car = await _appDbContext.Cars.SingleOrDefaultAsync(c => c.Id == id);
+            if (car == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
+            }
+
+            var vmEditVehicle = new EditVehicleViewModel
+            {
+                Id = car.Id,
+                PricePerDay = car.PricePerDay
+            };
+
+            return View(vmEditVehicle);
+        }
+
         [HttpPost("AddVehicle")]
-        public IActionResult AddVehicle(AddVehicleViewModel addVehicleViewModel)
+        public async Task<IActionResult> AddVehicle(AddVehicleViewModel addVehicleViewModel)
         {
 
             if (!ModelState.IsValid)
@@ -53,11 +96,11 @@ namespace Car_Renting.Controllers
                 addVehicleViewModel.PricePerDay,
                 addVehicleViewModel.LicensePlate);
 
-            _appDbContext.Cars.Add(car);
+            await _appDbContext.Cars.AddAsync(car);
 
             try
             {
-                _appDbContext.SaveChanges();
+                await _appDbContext.SaveChangesAsync();
             }
             catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 } sqlEx && sqlEx.Message.Contains("'IX_Cars_LicensePlate'"))
             {
@@ -68,80 +111,39 @@ namespace Car_Renting.Controllers
             return RedirectToAction("Inventory");
         }
 
-        [HttpGet("EditVehicle/{id}")]
-        public IActionResult EditVehicle(int id)
-        {
-            var car = _appDbContext.Cars.SingleOrDefault(c => c.Id == id);
-            if (car == null)
-            {
-                return View(new ErrorMessageViewModel("Car does not exist"));
-            }
-
-            var vmEditVehicle = new EditVehicleViewModel
-            {
-                Id = car.Id,
-                PricePerDay = car.PricePerDay
-            };
-
-            return View(vmEditVehicle);
-        }
-
         [HttpPost("EditVehicle/{id}")]
-        public IActionResult EditVehicle(int id, EditVehicleViewModel editVehiclePriceViewModel)
+        public async Task<IActionResult> EditVehicle(int id, EditVehicleViewModel editVehiclePriceViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View();
             }
 
-            var car = _appDbContext.Cars.Where(c => c.Id == id).SingleOrDefault();
+            var car = await _appDbContext.Cars.Where(c => c.Id == id).SingleOrDefaultAsync();
 
             if (car == null)
             {
-                return View(new ErrorMessageViewModel("Car does not exist"));
+                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
             }
 
             car.PricePerDay = editVehiclePriceViewModel.PricePerDay;
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
 
             return RedirectToAction("Inventory");
         }
 
-        [HttpGet("DeleteVehicle/{id}")]
-        public IActionResult DeleteVehicle(int id)
-        {
-            var car = _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefault();
-
-            if (car == null)
-            {
-                return View(new ErrorMessageViewModel("Car does not exist."));
-            }
-
-            DeleteVehicleViewModel deleteVehicleViewModel = new DeleteVehicleViewModel
-            {
-                Id = car.Id,
-                Year = car.Year,
-                Manufacturer = car.Manufacturer,
-                Model = car.Model,
-                LicensePlate = car.LicensePlate,
-                PricePerDay = car.PricePerDay
-            };
-
-            return View(deleteVehicleViewModel);
-        }
-
         [HttpPost("DeleteVehicleConfirm/{id}")]
-        public IActionResult DeleteVehicleConfirm(int id)
+        public async Task<IActionResult> DeleteVehicleConfirm(int id)
         {
-            var car = _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefault();
+            var car = await _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefaultAsync();
 
             if (car == null)
             {
-                return View(new ErrorMessageViewModel("Car does not exist"));
+                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
             }
 
             car.Status = CarStatus.Deleted;
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
 
             return RedirectToAction("Inventory");
         }

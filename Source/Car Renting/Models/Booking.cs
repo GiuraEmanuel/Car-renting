@@ -4,7 +4,7 @@ namespace Car_Renting.Models
 {
     public class Booking
     {
-        public int BookingId { get; private set; }
+        public int Id { get; private set; }
         public string UserId { get; private set; }
         public User User { get; private set; } = null!;
         public int CarId { get; private set; }
@@ -14,9 +14,9 @@ namespace Car_Renting.Models
         public decimal TotalCost { get; private set; }
         public BookingStatus Status { get; set; }
 
-        public Booking(int bookingId, string userId, int carId, DateTime bookingStart, DateTime bookingEnd, decimal totalCost)
+        public Booking(string userId, int carId,
+                DateTime bookingStart, DateTime bookingEnd, decimal totalCost)
         {
-            BookingId = bookingId;
             UserId = userId;
             CarId = carId;
             BookingStart = bookingStart;

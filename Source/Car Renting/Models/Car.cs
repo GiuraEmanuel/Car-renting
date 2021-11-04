@@ -25,10 +25,5 @@ namespace Car_Renting.Models
             LicensePlate = licensePlate;
             Status = CarStatus.Active;
         }
-
-        public void RentCar(Car car, DateTime time)
-        {
-
-        }
     }
 }

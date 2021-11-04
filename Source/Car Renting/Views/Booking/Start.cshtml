@@ -1,0 +1,47 @@
+﻿@model BookingStartViewModel
+
+<form asp-controller="Booking" asp-action="Start" method="get">
+    <div class="form-group">
+        <label for="StartDate">Start Date:</label>
+        <input type="date" value="@Model.StartDate?.ToString("yyyy-MM-dd")" id="StartDate" name="StartDate">
+    </div>
+    <div class="form-group">
+        <label for="EndDate">End Date:</label>
+        <input type="date" value="@Model.EndDate?.ToString("yyyy-MM-dd")" id="EndDate" name="EndDate">
+    </div>
+
+    <div class="text-danger">
+        <p>@Model.ErrorMessage</p>
+    </div> 
+    <input type="submit" value="Search">
+</form>
+
+
+@if (Model.Cars != null && Model.Cars.Count > 0)
+{
+    <table class="table" style="width:80%">
+        <thead class="thead-light">
+            <tr>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Price per day</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model.Cars)
+            {
+            <tr>
+                <td>@car.Manufacturer</td>
+                <td>@car.Model</td>
+                <td>@car.PricePerDay</td>
+                <td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Booking" asp-action="Confirm" asp-route-carId="@car.Id" asp-route-StartDate="@Model.StartDate!.Value.ToString("yyyy-MM-dd")" asp-route-EndDate="@Model.EndDate!.Value.ToString("yyyy-MM-dd")">Book Now</a>
+                </td>
+            </tr>
+            }
+        </tbody>    
+    </table>
+}
+
+

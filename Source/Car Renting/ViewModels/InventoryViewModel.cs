@@ -14,6 +14,13 @@ namespace Car_Renting.ViewModels
 
         public class Car
         {
+            public int Id { get; }
+            public int Year { get; }
+            public string Manufacturer { get; }
+            public string Model { get; }
+            public string LicensePlate { get; }
+            public decimal PricePerDay { get; }
+
             public Car(int id, int year, string manufacturer, string model, string licensePlate, decimal pricePerDay)
             {
                 Id = id;
@@ -23,14 +30,6 @@ namespace Car_Renting.ViewModels
                 LicensePlate = licensePlate;
                 PricePerDay = pricePerDay;
             }
-
-            public int Id { get;}
-            public int Year { get;}
-            public string Manufacturer { get;}
-            public string Model { get;}
-            public string LicensePlate { get;}
-            public decimal PricePerDay { get; }
-
         }
     }
 }
