@@ -1,5 +1,5 @@
-﻿using Car_Renting.Models;
-using Car_Renting.ViewModels;
+﻿using Car_Renting.Data;
+using Car_Renting.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Car_Renting.Models;
+using Car_Renting.Data;
 #nullable disable
 namespace Car_Renting.Areas.Identity.Pages.Account
 {
