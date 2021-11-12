@@ -11,7 +11,7 @@ namespace Car_Renting.Models
         public DateTime StartDate { get; }
         public DateTime EndDate { get; }
         public int TotalNumberOfDays => (EndDate - StartDate).Days;
-        public decimal TotalPrice => TotalNumberOfDays * PricePerDay;
+        public decimal TotalCost => TotalNumberOfDays * PricePerDay;
 
 
         public BookingConfirmViewModel(int carId, string manufacturer, string model, decimal pricePerDay,

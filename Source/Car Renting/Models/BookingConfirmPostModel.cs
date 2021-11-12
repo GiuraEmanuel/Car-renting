@@ -10,7 +10,8 @@ namespace Car_Renting.Models
         public int CarId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public decimal TotalPrice { get; set; }
+        public int TotalNumberOfDays => (EndDate - StartDate).Days;
+        public decimal TotalCost { get; set; }
         // Not currently validated, just for demonstration purposes
         public string CCNumber { get; set; } = string.Empty;
         // Not currently validated, just for demonstration purposes

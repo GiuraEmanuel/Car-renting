@@ -27,9 +27,16 @@ namespace Car_Renting.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Index(int id)
+        public async Task<IActionResult> Index(int id)
         {
-            return Ok("Good.");
+            var booking = await _appDbContext.Bookings
+                .Include(b => b.Car)
+                .Where(b => b.Id == id)
+                .Select(booking => new BookingDetailsViewModel(booking.BookingStart, booking.BookingEnd, booking.Car.Manufacturer, booking.Car.Model,
+                 booking.TotalCost))
+                .SingleOrDefaultAsync();
+
+            return View(booking);
         }
 
         [HttpGet("Start")]
@@ -96,13 +103,28 @@ namespace Car_Renting.Controllers
         [HttpPost("Confirm")]
         public async Task<IActionResult> Confirm(BookingConfirmPostModel bookingConfirmPostModel)
         {
+            const string startBookingAgainMessage = " Please go back and start your booking again. We apologize for the inconvenience.";
+
+            var car = await _appDbContext.Cars.SingleOrDefaultAsync(car => car.Id == bookingConfirmPostModel.CarId && car.Status == CarStatus.Active);
+
+            if (car == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Selected car is no longer available" + startBookingAgainMessage));
+            }
+
+            if (bookingConfirmPostModel.TotalCost != bookingConfirmPostModel.TotalNumberOfDays * car.PricePerDay)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("The price of the vehicle you are booking has changed." +
+                    startBookingAgainMessage));
+            }
             var userId = _userManager.GetUserId(HttpContext.User);
+            // [Credit card would be processed here in a real application]
             var booking = new Booking(userId, bookingConfirmPostModel.CarId,
-                 bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalPrice);
-            _appDbContext.Bookings.Add(booking);
+                 bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalCost);
+
+            await _appDbContext.Bookings.AddAsync(booking);
             await _appDbContext.SaveChangesAsync();
             return RedirectToAction("Index", new { id = booking.Id });
         }
-
     }
 }
