@@ -47,6 +47,7 @@
         <input type="text" id="CCV" name="CCV">
     </div>
     <p>Are you sure you want to book this car?</p>
+    <input name="TotalCost" type="hidden" value="@Model.TotalCost">
     <input type="submit" value="Confirm Booking" asp-controller="Bookings" asp-action="Confirm">
 </form>
 
