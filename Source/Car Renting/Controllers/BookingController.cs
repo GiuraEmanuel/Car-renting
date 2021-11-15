@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +16,8 @@ namespace Car_Renting.Controllers
     [Authorize]
     [Route("Bookings")]
     public class BookingController : Controller
-    {
+    {   
+        const string StartBookingAgainMessage = " Please go back and start your booking again. We apologize for the inconvenience.";
 
         private readonly AppDbContext _appDbContext;
 
@@ -27,15 +30,14 @@ namespace Car_Renting.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Detail(int id)
         {
             var booking = await _appDbContext.Bookings
                 .Include(b => b.Car)
                 .Where(b => b.Id == id)
-                .Select(booking => new BookingDetailsViewModel(booking.BookingStart, booking.BookingEnd, booking.Car.Manufacturer, booking.Car.Model,
-                 booking.TotalCost))
+                .Select(booking => new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
+                 booking.TotalCost,booking.User.UserName,booking.User.Email,booking.User.PhoneNumber,booking.User.Id))
                 .SingleOrDefaultAsync();
-
             return View(booking);
         }
 
@@ -46,54 +48,39 @@ namespace Car_Renting.Controllers
             {
                 return View(new BookingStartViewModel());
             }
-            else
+            else if (!TryValidateDateRange(startDate, endDate, out string? error))
             {
-                string? error = null;
-                if (startDate == null)
+                if (startDate == endDate)
                 {
-                    error = "Start date can't be empty.";
-                }
-                else if (endDate == null)
-                {
-                    error = "End date can't be empty.";
-                }
-                else if (startDate < DateTime.Today)
-                {
-                    error = "Start date can't preceed the current day.";
-                }
-                else if (endDate < startDate)
-                {
-                    error = "End date must follow start date.";
-                }
-                else if (startDate == endDate)
-                {
-                    error = "Minimum booking length is 1 day.";
-                    endDate = startDate.Value.AddDays(1);
+                    endDate = startDate!.Value.AddDays(1);
                 }
 
-                if (error != null)
-                {
-                    var errorModel = new BookingStartViewModel(startDate, endDate, error);
-                    return View(errorModel);
-                }
+                var errorModel = new BookingStartViewModel(startDate, endDate, error);
+                return View(errorModel);
             }
 
             var cars = await _appDbContext.Cars
-                .Where(car => car.Status == CarStatus.Active)
+                .Where(car => car.Status == CarStatus.Active && car.Bookings.All(b => startDate >= b.EndDate || endDate <= b.StartDate))
                 .Select(car => new BookingStartViewModel.Car(car.Id, car.Year, car.Manufacturer, car.Model, car.LicensePlate,
                  car.PricePerDay)).ToListAsync();
-            var startViewModel = new BookingStartViewModel(startDate!.Value, endDate!.Value, cars);
+            var startViewModel = new BookingStartViewModel(startDate.Value, endDate.Value, cars);
             return View(startViewModel);
         }
 
         [HttpGet("Confirm")]
         public async Task<IActionResult> Confirm(int carId, DateTime startDate, DateTime endDate)
         {
-            var car = await _appDbContext.Cars.Where(c => c.Id == carId).SingleOrDefaultAsync();
+            if (!TryValidateDateRange(startDate, endDate, out string? error))
+            {
+                var errorModel = new ErrorMessageViewModel(error + StartBookingAgainMessage);
+                return View("ErrorMessage", errorModel);
+            }
+
+            Car car = await GetActiveAndAvailableCar(carId, startDate, endDate);
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
+                return View("ErrorMessage", new ErrorMessageViewModel("Car is no longer available." + StartBookingAgainMessage));
             }
 
             var bookingConfirmVM = new BookingConfirmViewModel(car.Id, car.Manufacturer, car.Model, car.PricePerDay, startDate, endDate);
@@ -103,28 +90,76 @@ namespace Car_Renting.Controllers
         [HttpPost("Confirm")]
         public async Task<IActionResult> Confirm(BookingConfirmPostModel bookingConfirmPostModel)
         {
-            const string startBookingAgainMessage = " Please go back and start your booking again. We apologize for the inconvenience.";
+            if (!TryValidateDateRange(bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, out string? error))
+            {
+                var errorModel = new ErrorMessageViewModel(error + StartBookingAgainMessage);
+                return View("ErrorMessage", errorModel);
+            }
 
-            var car = await _appDbContext.Cars.SingleOrDefaultAsync(car => car.Id == bookingConfirmPostModel.CarId && car.Status == CarStatus.Active);
+            var car = await GetActiveAndAvailableCar(bookingConfirmPostModel.CarId, bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate);
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Selected car is no longer available" + startBookingAgainMessage));
+                return View("ErrorMessage", new ErrorMessageViewModel("Car is no longer available." + StartBookingAgainMessage));
             }
 
             if (bookingConfirmPostModel.TotalCost != bookingConfirmPostModel.TotalNumberOfDays * car.PricePerDay)
             {
                 return View("ErrorMessage", new ErrorMessageViewModel("The price of the vehicle you are booking has changed." +
-                    startBookingAgainMessage));
+                    StartBookingAgainMessage));
             }
             var userId = _userManager.GetUserId(HttpContext.User);
             // [Credit card would be processed here in a real application]
             var booking = new Booking(userId, bookingConfirmPostModel.CarId,
-                 bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalCost);
+                    bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalCost);
 
             await _appDbContext.Bookings.AddAsync(booking);
             await _appDbContext.SaveChangesAsync();
-            return RedirectToAction("Index", new { id = booking.Id });
+
+            return RedirectToAction("Detail", new { id = booking.Id });
+        }
+
+        private async Task<Car> GetActiveAndAvailableCar(int carId, DateTime startDate, DateTime endDate)
+        {
+            return await _appDbContext.Cars
+                .SingleOrDefaultAsync(c => c.Id == carId && 
+                    c.Status == CarStatus.Active && 
+                    c.Bookings.All(b => startDate >= b.EndDate || endDate <= b.StartDate));
+        }
+
+        private static bool TryValidateDateRange([NotNullWhen(true)] DateTime? startDate, [NotNullWhen(true)] DateTime? endDate, [NotNullWhen(false)] out string? error)
+        {
+            if (startDate == null)
+            {
+                error = "Start date can't be empty.";
+            }
+            else if (endDate == null)
+            {
+                error = "End date can't be empty.";
+            }
+            else if (startDate.Value.TimeOfDay != TimeSpan.Zero || endDate.Value.TimeOfDay != TimeSpan.Zero)
+            {
+                throw new InvalidDataException("Unexpected time component in date.");
+            }
+            else if (startDate < DateTime.Today)
+            {
+                error = "Start date can't preceed the current day.";
+            }
+            else if (endDate < startDate)
+            {
+                error = "End date must follow start date.";
+            }
+            else if (startDate == endDate)
+            {
+                error = "Minimum booking length is 1 day.";
+            }
+            else
+            {
+                error = null;
+                return true;
+            }
+
+            return false;
         }
     }
 }
