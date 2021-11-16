@@ -13,11 +13,11 @@ namespace Car_Renting.Models
         public string Name { get; }
         public string Email { get; }
         public string PhoneNumber { get; }
-        public string BookingNumber { get; }
+        public int BookingId { get; }
 
         public BookingDetailsViewModel(DateTime startDate, DateTime endDate,
             string manufacturer, string model, decimal totalCost,
-            string firstName, string lastName, string email, string phoneNumber, string bookingNumber)
+            string firstName, string lastName, string email, string phoneNumber, int bookingId)
         {
             StartDate = startDate;
             EndDate = endDate;
@@ -27,7 +27,7 @@ namespace Car_Renting.Models
             Name = firstName + " " + lastName;
             Email = email;
             PhoneNumber = phoneNumber;
-            BookingNumber = bookingNumber;
+            BookingId = bookingId;
         }
     }
 }

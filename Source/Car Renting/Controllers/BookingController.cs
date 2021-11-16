@@ -36,7 +36,7 @@ namespace Car_Renting.Controllers
                 .Include(b => b.Car)
                 .Where(b => b.Id == id)
                 .Select(booking => new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
-                 booking.TotalCost,booking.User.FirstName,booking.User.LastName,booking.User.Email,booking.User.PhoneNumber,booking.User.Id))
+                 booking.TotalCost,booking.User.FirstName,booking.User.LastName,booking.User.Email,booking.User.PhoneNumber,booking.Id))
                 .SingleOrDefaultAsync();
             return View(booking);
         }
