@@ -48,7 +48,7 @@ namespace Car_Renting.Controllers
                 .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Model, b.Car.Manufacturer, b.TotalCost))
                 .ToListAsync();
 
-            var model = new BookingIndexViewModel(bookings);
+            var model = new BookingIndexViewModel(bookings, isAdmin);
             return View(model);
         }
 

@@ -9,8 +9,9 @@ namespace Car_Renting.Models
         public List<BookingInfo> CurrentBookings { get; } = new();
         public List<BookingInfo> PastBookings { get; } = new();
         public List<BookingInfo> UpcomingBookings { get; } = new();
+        public bool IsAdmin { get;}
 
-        public BookingIndexViewModel(IEnumerable<BookingInfo> bookings)
+        public BookingIndexViewModel(IEnumerable<BookingInfo> bookings, bool isAdmin)
         {
             foreach (var booking in bookings)
             {
@@ -27,6 +28,8 @@ namespace Car_Renting.Models
                     CurrentBookings.Add(booking);
                 }
             }
+
+            IsAdmin = isAdmin;
         }
 
         public class BookingInfo

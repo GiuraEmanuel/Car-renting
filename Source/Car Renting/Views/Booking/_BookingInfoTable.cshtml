@@ -1,10 +1,17 @@
 ﻿@model List<BookingIndexViewModel.BookingInfo>
 
+@{
+    bool isAdmin = ViewBag.IsAdmin;
+}
+
 <table class="table" style="width:80%">
     <thead class="thead-light">
         <tr>
             <th>#</th>
-            <th>Email</th>
+            @if (isAdmin)
+            {
+                <th>Email</th>
+            }
             <th>Start date</th>
             <th>Days</th>
             <th>Manufacturer</th>
@@ -16,18 +23,22 @@
     <tbody>
         @foreach (var booking in Model)
         {
-        <tr>
-            <td>@booking.Id</td>
-            <td>@booking.Email</td>
-            <td>@booking.StartDate.ToShortDateString()</td>
-            <td>@booking.NumberOfDays</td>
-            <td>@booking.Manufacturer</td>
-            <td>@booking.Model</td>
-            <td>@booking.TotalCost</td>
-            <td>
-                <a class="btn btn-sm btn-outline-primary" asp-controller="Booking" asp-action="Detail" asp-route-id="@booking.Id">View</a>
-            </td>
-        </tr>
+            <tr>
+                <td>@booking.Id</td>
+                @if (isAdmin)
+                {
+                    <td>@booking.Email</td>
+                }
+
+                <td>@booking.StartDate.ToShortDateString()</td>
+                <td>@booking.NumberOfDays</td>
+                <td>@booking.Manufacturer</td>
+                <td>@booking.Model</td>
+                <td>@booking.TotalCost</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Booking" asp-action="Detail" asp-route-id="@booking.Id">View</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
