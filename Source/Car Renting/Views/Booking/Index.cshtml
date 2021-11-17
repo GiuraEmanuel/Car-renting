@@ -1,0 +1,21 @@
+﻿@model BookingIndexViewModel
+
+@if (Model.CurrentBookings.Count > 0)
+{
+    <h3>Current Bookings</h3>
+    <partial name="_BookingInfoTable" model="@Model.CurrentBookings" />
+}
+
+@if (Model.UpcomingBookings.Count > 0)
+{
+    <h3>Upcoming bookings</h3>
+    <partial name="_BookingInfoTable" model="@Model.UpcomingBookings" />
+}
+
+@if (Model.PastBookings.Count > 0)
+{
+    <h3>Past bookings</h3>
+    <partial name="_BookingInfoTable" model="@Model.PastBookings" />
+}
+
+

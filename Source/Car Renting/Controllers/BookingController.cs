@@ -6,17 +6,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static Car_Renting.Models.BookingIndexViewModel;
 
 namespace Car_Renting.Controllers
 {
     [Authorize]
     [Route("Bookings")]
     public class BookingController : Controller
-    {   
+    {
         const string StartBookingAgainMessage = " Please go back and start your booking again. We apologize for the inconvenience.";
 
         private readonly AppDbContext _appDbContext;
@@ -29,6 +31,27 @@ namespace Car_Renting.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            IQueryable<Booking> bookingsQuery = _appDbContext.Bookings;
+
+            if (!isAdmin)
+            {
+                bookingsQuery = bookingsQuery.Where(b => b.UserId == user.Id);
+            }
+
+            List<BookingInfo> bookings = await bookingsQuery
+                .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Model, b.Car.Manufacturer, b.TotalCost))
+                .ToListAsync();
+
+            var model = new BookingIndexViewModel(bookings);
+            return View(model);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Detail(int id)
         {
@@ -36,7 +59,7 @@ namespace Car_Renting.Controllers
                 .Include(b => b.Car)
                 .Where(b => b.Id == id)
                 .Select(booking => new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
-                 booking.TotalCost,booking.User.FirstName,booking.User.LastName,booking.User.Email,booking.User.PhoneNumber,booking.Id))
+                 booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber, booking.Id))
                 .SingleOrDefaultAsync();
             return View(booking);
         }
@@ -122,8 +145,8 @@ namespace Car_Renting.Controllers
         private async Task<Car> GetActiveAndAvailableCar(int carId, DateTime startDate, DateTime endDate)
         {
             return await _appDbContext.Cars
-                .SingleOrDefaultAsync(c => c.Id == carId && 
-                    c.Status == CarStatus.Active && 
+                .SingleOrDefaultAsync(c => c.Id == carId &&
+                    c.Status == CarStatus.Active &&
                     c.Bookings.All(b => startDate >= b.EndDate || endDate <= b.StartDate));
         }
 
