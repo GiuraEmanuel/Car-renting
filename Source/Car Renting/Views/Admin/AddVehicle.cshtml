@@ -1,5 +1,11 @@
 ﻿@model AddVehicleViewModel
 
+@{
+    ViewBag.Title = "Add vehicle";
+}
+
+<h1>@ViewBag.Title</h1>
+
 <form asp-controller="Admin" asp-action="AddVehicle" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">

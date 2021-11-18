@@ -1,5 +1,11 @@
 ﻿@model BookingDetailsViewModel
 
+@{
+    ViewBag.Title = "Booking details";
+}
+
+<h1>@ViewBag.Title</h1>
+
 <form asp-controller="Booking" asp-action="Index" method="get">
     <div class="form-group">
         <label for="StartDate">Start Date:</label>

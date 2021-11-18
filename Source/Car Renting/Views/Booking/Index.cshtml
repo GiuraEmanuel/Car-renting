@@ -1,8 +1,14 @@
 ﻿@model BookingIndexViewModel
 
 @{
+    ViewBag.Title = "User bookings";
+}
+
+@{
     ViewBag.IsAdmin = Model.IsAdmin;
 }
+
+<h1>@ViewBag.Title</h1>
 
 @if (Model.CurrentBookings.Count > 0)
 {

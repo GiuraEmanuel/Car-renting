@@ -1,5 +1,11 @@
 ﻿@model DeleteVehicleViewModel
 
+@{
+    ViewBag.Title = "Delete vehicle";
+}
+
+<h1>@ViewBag.Title</h1>
+
 <form asp-controller="Admin" asp-action="DeleteVehicleConfirm" method="post" asp-route-id="@Model.Id">
     <div class="form-group">
         <label for="Year">Year:</label>
