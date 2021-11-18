@@ -34,12 +34,11 @@ namespace Car_Renting.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            var user = await GetCurrentUserAsync();
 
             IQueryable<Booking> bookingsQuery = _appDbContext.Bookings;
 
-            if (!isAdmin)
+            if (!await CheckIfAdmin(user))
             {
                 bookingsQuery = bookingsQuery.Where(b => b.UserId == user.Id);
             }
@@ -48,20 +47,28 @@ namespace Car_Renting.Controllers
                 .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Model, b.Car.Manufacturer, b.TotalCost))
                 .ToListAsync();
 
-            var model = new BookingIndexViewModel(bookings, isAdmin);
+            var model = new BookingIndexViewModel(bookings, await CheckIfAdmin(user));
             return View(model);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Detail(int id)
         {
-            var booking = await _appDbContext.Bookings
-                .Include(b => b.Car)
+            var user = await GetCurrentUserAsync();
+
+            var bookingInfo = await _appDbContext.Bookings
                 .Where(b => b.Id == id)
-                .Select(booking => new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
-                 booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber, booking.Id))
-                .SingleOrDefaultAsync();
-            return View(booking);
+                .Select(booking => new {
+                    UserId = booking.UserId,
+                    VM = new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
+                     booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber, booking.Id)
+                }).SingleOrDefaultAsync();
+
+            if (user.Id == bookingInfo.UserId || await CheckIfAdmin(user))
+            {
+                return View(bookingInfo.VM);
+            }
+            return View("ErrorMessage", new ErrorMessageViewModel("You are not allowed to see the details of this booking."));
         }
 
         [HttpGet("Start")]
@@ -184,5 +191,9 @@ namespace Car_Renting.Controllers
 
             return false;
         }
+
+        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        private Task<bool> CheckIfAdmin(User user) => _userManager.IsInRoleAsync(user, "Admin");
     }
 }
