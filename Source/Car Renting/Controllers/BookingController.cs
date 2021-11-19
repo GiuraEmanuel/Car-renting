@@ -44,6 +44,7 @@ namespace Car_Renting.Controllers
             }
 
             List<BookingInfo> bookings = await bookingsQuery
+                .Where(b => b.Status == BookingStatus.Active)
                 .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Model, b.Car.Manufacturer, b.TotalCost))
                 .ToListAsync();
 
@@ -58,7 +59,8 @@ namespace Car_Renting.Controllers
 
             var bookingInfo = await _appDbContext.Bookings
                 .Where(b => b.Id == id)
-                .Select(booking => new {
+                .Select(booking => new
+                {
                     UserId = booking.UserId,
                     VM = new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
                      booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber, booking.Id)
