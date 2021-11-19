@@ -14,6 +14,7 @@ namespace Car_Renting.Models
         public string Email { get; }
         public string PhoneNumber { get; }
         public int BookingId { get; }
+        public decimal CancelRefundAmount { get;}
 
         public BookingDetailsViewModel(DateTime startDate, DateTime endDate,
             string manufacturer, string model, decimal totalCost,
@@ -28,6 +29,22 @@ namespace Car_Renting.Models
             Email = email;
             PhoneNumber = phoneNumber;
             BookingId = bookingId;
+
+
+            // Bookings for today cannot be cancelled, days can only be cancelled the day before, so only a partial refund is issued for the remaining days
+            if (StartDate > DateTime.Today)
+            {
+                CancelRefundAmount = TotalCost;
+            }
+            else if (endDate <= DateTime.Today)
+            {
+                CancelRefundAmount = 0;
+            }
+            else
+            {
+                int penaltyDays = (DateTime.Today - StartDate).Days + 1;
+                CancelRefundAmount = TotalCost * (TotalNumberOfDays - penaltyDays) / TotalNumberOfDays;
+            }
         }
     }
 }

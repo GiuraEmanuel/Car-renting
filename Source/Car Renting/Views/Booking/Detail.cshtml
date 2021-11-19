@@ -6,46 +6,78 @@
 
 <h1>@ViewBag.Title</h1>
 
-<form asp-controller="Booking" asp-action="Index" method="get">
+<div>
     <div class="form-group">
-        <label for="StartDate">Start Date:</label>
+        <label>Start Date:</label>
         <p>@Model.StartDate.ToShortDateString()</p>
     </div>
     <div class="form-group">
-        <label for="EndDate">End Date:</label>
+        <label>End Date:</label>
         <p>@Model.EndDate.ToShortDateString()</p>
     </div>
     <div class="form-group">
-        <label for="Manufacturer">Manufacturer:</label>
+        <label>Manufacturer:</label>
         <p>@Model.Manufacturer</p>
     </div>
     <div class="form-group">
-        <label for="Model">Model:</label>
+        <label>Model:</label>
         <p>@Model.Model</p>
     </div>
     <div class="form-group">
-        <label for="TotalNumberOfDays">Total Number Of Days:</label>
+        <label>Total Number Of Days:</label>
         <p>@Model.TotalNumberOfDays</p>
     </div>
     <div class="form-group">
-        <label for="TotalCost">Total Cost:</label>
+        <label>Total Cost:</label>
         <p>@Model.TotalCost</p>
     </div>
 
     <div class="form-group">
-        <label for="BookingNumber">Booking Number:</label>
+        <label>Booking Number:</label>
         <p>@Model.BookingId</p>
     </div>
     <div class="form-group">
-        <label for="Name">Name:</label>
+        <label>Name:</label>
         <p>@Model.Name</p>
     </div>
     <div class="form-group">
-        <label for="Email">Email:</label>
+        <label>Email:</label>
         <p>@Model.Email</p>
     </div>
     <div class="form-group">
-        <label for="PhoneNumber">Phone Number:</label>
+        <label>Phone Number:</label>
         <p>@Model.PhoneNumber</p>
     </div>
-</form>
+</div>
+
+
+@if (Model.CancelRefundAmount > 0)
+{
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cancelModal">
+        Cancel
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to cancel this booking? Your refund amount will be @Model.CancelRefundAmount.
+                </div>
+                <form class="modal-footer">
+                    <input name="id" type="hidden" value="@Model.BookingId">
+                    <input name="refundAmount" type="hidden" value="@Model.CancelRefundAmount">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <input type="submit" value="Yes" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+}
