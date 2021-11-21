@@ -96,7 +96,7 @@ namespace Car_Renting.Controllers
                 addVehicleViewModel.PricePerDay,
                 addVehicleViewModel.LicensePlate);
 
-            await _appDbContext.Cars.AddAsync(car);
+            _appDbContext.Cars.Add(car);
 
             try
             {
@@ -108,7 +108,7 @@ namespace Car_Renting.Controllers
                 return View();
             }
 
-            return RedirectToAction("Inventory");
+            return RedirectToAction(nameof(Inventory));
         }
 
         [HttpPost("EditVehicle/{id}")]
@@ -129,7 +129,7 @@ namespace Car_Renting.Controllers
             car.PricePerDay = editVehiclePriceViewModel.PricePerDay;
             await _appDbContext.SaveChangesAsync();
 
-            return RedirectToAction("Inventory");
+            return RedirectToAction(nameof(Inventory));
         }
 
         [HttpPost("DeleteVehicleConfirm/{id}")]
@@ -145,7 +145,7 @@ namespace Car_Renting.Controllers
             car.Status = CarStatus.Deleted;
             await _appDbContext.SaveChangesAsync();
 
-            return RedirectToAction("Inventory");
+            return RedirectToAction(nameof(Inventory));
         }
     }
 }

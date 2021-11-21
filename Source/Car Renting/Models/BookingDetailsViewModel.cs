@@ -14,12 +14,21 @@ namespace Car_Renting.Models
         public string Email { get; }
         public string PhoneNumber { get; }
         public int BookingId { get; }
-        public decimal CancelRefundAmount { get;}
+        /// <summary>
+        /// The amount that that will be refunded if the user cancels the booking
+        /// </summary>
+        public decimal RefundAmountIfCancelling { get; }
+        public DateTime? CancelDateTimeLocal { get; }
+        /// <summary>
+        /// The amount that was already refunded
+        /// </summary>
+        public decimal? CancelRefundAmount { get; }
 
-        public BookingDetailsViewModel(DateTime startDate, DateTime endDate,
+        public BookingDetailsViewModel(int bookingId, DateTime startDate, DateTime endDate,
             string manufacturer, string model, decimal totalCost,
-            string firstName, string lastName, string email, string phoneNumber, int bookingId)
+            string firstName, string lastName, string email, string phoneNumber, DateTime? cancelDateTimeUtc, decimal? cancelRefundAmount)
         {
+            BookingId = bookingId;
             StartDate = startDate;
             EndDate = endDate;
             Manufacturer = manufacturer;
@@ -28,23 +37,19 @@ namespace Car_Renting.Models
             Name = firstName + " " + lastName;
             Email = email;
             PhoneNumber = phoneNumber;
-            BookingId = bookingId;
+            CancelDateTimeLocal = cancelDateTimeUtc?.ToLocalTime();
+            CancelRefundAmount = cancelRefundAmount;
 
-
-            // Bookings for today cannot be cancelled, days can only be cancelled the day before, so only a partial refund is issued for the remaining days
-            if (StartDate > DateTime.Today)
+            if (CancelRefundAmount != null)
             {
-                CancelRefundAmount = TotalCost;
-            }
-            else if (endDate <= DateTime.Today)
-            {
-                CancelRefundAmount = 0;
+                RefundAmountIfCancelling = 0;
             }
             else
             {
-                int penaltyDays = (DateTime.Today - StartDate).Days + 1;
-                CancelRefundAmount = TotalCost * (TotalNumberOfDays - penaltyDays) / TotalNumberOfDays;
+                RefundAmountIfCancelling = Booking.CalculateRefund(startDate, endDate, totalCost);
             }
         }
+
+
     }
 }

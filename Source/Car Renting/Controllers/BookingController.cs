@@ -62,8 +62,9 @@ namespace Car_Renting.Controllers
                 .Select(booking => new
                 {
                     UserId = booking.UserId,
-                    VM = new BookingDetailsViewModel(booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
-                     booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber, booking.Id)
+                    VM = new BookingDetailsViewModel(booking.Id, booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
+                     booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber,
+                     booking.CancelDateTimeUtc, booking.CancelRefundAmount)
                 }).SingleOrDefaultAsync();
 
             if (user.Id == bookingInfo.UserId || await CheckIfAdmin(user))
@@ -145,10 +146,39 @@ namespace Car_Renting.Controllers
             var booking = new Booking(userId, bookingConfirmPostModel.CarId,
                     bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalCost);
 
-            await _appDbContext.Bookings.AddAsync(booking);
+            _appDbContext.Bookings.Add(booking);
             await _appDbContext.SaveChangesAsync();
 
-            return RedirectToAction("Detail", new { id = booking.Id });
+            return RedirectToAction(nameof(Detail), new { id = booking.Id });
+        }
+
+        [HttpPost("Cancel")]
+        public async Task<IActionResult> Cancel(BookingCancelPostModel cancelPostModel)
+        {
+            var booking = await _appDbContext.Bookings.SingleOrDefaultAsync(b => b.Id == cancelPostModel.Id);
+
+            if (booking == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Booking not found."));
+            }
+
+            if (booking.Status == BookingStatus.Cancelled)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Booking has already been canceled"));
+            }
+
+            var refundAmount = Booking.CalculateRefund(booking.StartDate, booking.EndDate, booking.TotalCost);
+
+            if (refundAmount != cancelPostModel.RefundAmount)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Refund amount has changed, please go back and cancel your booking again."));
+            }
+
+            booking.Cancel(refundAmount);
+
+            await _appDbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Detail), new { id = booking.Id });
         }
 
         private async Task<Car> GetActiveAndAvailableCar(int carId, DateTime startDate, DateTime endDate)

@@ -6,6 +6,13 @@
 
 <h1>@ViewBag.Title</h1>
 
+@if (Model.CancelDateTimeLocal != null)
+{
+    <div class="alert alert-primary" role="alert">
+        This booking was cancelled on @Model.CancelDateTimeLocal.Value.ToShortDateString() at @Model.CancelDateTimeLocal.Value.ToShortTimeString() and a refund of @Model.CancelRefundAmount was issued.
+    </div>
+}
+
 <div>
     <div class="form-group">
         <label>Start Date:</label>
@@ -48,10 +55,13 @@
         <label>Phone Number:</label>
         <p>@Model.PhoneNumber</p>
     </div>
+
+
+
 </div>
 
 
-@if (Model.CancelRefundAmount > 0)
+@if (Model.RefundAmountIfCancelling > 0)
 {
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cancelModal">
         Cancel
@@ -68,11 +78,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to cancel this booking? Your refund amount will be @Model.CancelRefundAmount.
+                    Are you sure you want to cancel this booking? Your refund amount will be @Model.RefundAmountIfCancelling.
                 </div>
-                <form class="modal-footer">
+                <form class="modal-footer" asp-controller="Booking" asp-action="Cancel" method="post">
                     <input name="id" type="hidden" value="@Model.BookingId">
-                    <input name="refundAmount" type="hidden" value="@Model.CancelRefundAmount">
+                    <input name="refundAmount" type="hidden" value="@Model.RefundAmountIfCancelling">
 
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                     <input type="submit" value="Yes" class="btn btn-primary">
