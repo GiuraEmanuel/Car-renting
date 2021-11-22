@@ -24,12 +24,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Booking" asp-action="Start">Book Now</a>
                         </li>
-                        <partial name="_LoginPartial" />
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+
+    @await RenderSectionAsync("Header", required: false)
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

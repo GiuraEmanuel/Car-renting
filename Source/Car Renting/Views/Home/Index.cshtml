@@ -2,7 +2,19 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Header
+{
+          <div class="view" style="background-image: url('/images/orange_car.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+            <div class="mask align-items-center" style="background-color: rgba(0, 0, 0, 0.6);">
+              <div class="container-fluid py-5">
+                <div class="row">
+                  <div class="col-12 text-white text-center my-5 wow fadeInLeft" data-wow-delay="0.3s">
+                    <h2 class="mb-3">Rent with the Best Rental Service in Town</h2>
+                    <h5 class="mb-4">Competitive rates and great cars</h5>
+                    <a class="btn btn-outline-light btn-lg m-2" role="button" asp-controller="Booking" asp-action="Start">Book Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+}
