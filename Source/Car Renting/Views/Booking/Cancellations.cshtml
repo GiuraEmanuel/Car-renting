@@ -1,0 +1,18 @@
+﻿@model BookingCancellationsViewModel
+
+@{
+    ViewBag.Title = "Canceled Bookings";
+    ViewBag.IsAdmin = true; //Model.IsAdmin;
+}
+
+<h1>@ViewBag.Title</h1>
+
+@if (Model.Bookings.Count == 0)
+{
+    <p>No bookings found.</p>
+}
+else
+{
+    <partial name="_BookingInfoTable" model="@Model.Bookings" view-data="ViewData" />
+}
+
