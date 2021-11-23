@@ -2,6 +2,7 @@
 using Car_Renting.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +25,14 @@ namespace Car_Renting.Controllers
         private readonly AppDbContext _appDbContext;
 
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public BookingController(AppDbContext appDbContext, UserManager<User> userManager)
+        public BookingController(AppDbContext appDbContext, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _appDbContext = appDbContext;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -58,6 +60,7 @@ namespace Car_Renting.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [HttpGet("Start")]
         public async Task<IActionResult> Start(DateTime? startDate, DateTime? endDate)
         {
@@ -84,9 +87,16 @@ namespace Car_Renting.Controllers
             return View(startViewModel);
         }
 
+        [AllowAnonymous]
         [HttpGet("Confirm")]
         public async Task<IActionResult> Confirm(int carId, DateTime startDate, DateTime endDate)
         {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                string url = Url.Action("Confirm", new { carId, startDate, endDate });
+                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = url });
+            }
+
             if (!TryValidateDateRange(startDate, endDate, out string? error))
             {
                 var errorModel = new ErrorMessageViewModel(error + StartBookingAgainMessage);
@@ -230,7 +240,7 @@ namespace Car_Renting.Controllers
             return false;
         }
 
-        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+        private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(User);
 
         private Task<bool> CheckIfAdmin(User user) => _userManager.IsInRoleAsync(user, "Admin");
         private async Task<List<BookingInfo>> GetBookingInfosAsync(string userId, bool isAdmin, BookingStatus bookingStatus)
