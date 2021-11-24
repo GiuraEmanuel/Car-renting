@@ -1,0 +1,34 @@
+﻿@model BookingIndexViewModel
+
+@{
+    ViewBag.Title = "User bookings";
+    ViewBag.IsAdmin = Model.IsAdmin;
+}
+
+<a class="btn btn-sm btn-outline-primary" style="float: right" asp-controller="Booking" asp-action="Cancellations">View Cancelled Bookings</a>
+<h1>@ViewBag.Title</h1>
+
+@if (Model.CurrentBookings.Count == 0 && Model.UpcomingBookings.Count == 0 && Model.PastBookings.Count == 0)
+{
+    <p>No bookings found.</p>
+}
+
+@if (Model.CurrentBookings.Count > 0)
+{
+    <h3>Current Bookings</h3>
+    <partial name="_BookingInfoTable" model="@Model.CurrentBookings" view-data="ViewData" />
+}
+
+@if (Model.UpcomingBookings.Count > 0)
+{
+    <h3>Upcoming bookings</h3>
+    <partial name="_BookingInfoTable" model="@Model.UpcomingBookings" view-data="ViewData" />
+}
+
+@if (Model.PastBookings.Count > 0)
+{
+    <h3>Past bookings</h3>
+    <partial name="_BookingInfoTable" model="@Model.PastBookings" view-data="ViewData" />
+}
+
+

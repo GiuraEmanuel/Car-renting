@@ -1,5 +1,11 @@
 ﻿@model InventoryViewModel
 
+@{
+    ViewBag.Title = "Car inventory";
+}
+
+<h1>@ViewBag.Title</h1>
+
 <table class="table" style="width:80%">
     <thead class="thead-light">
         <tr>
@@ -14,17 +20,17 @@
     <tbody>
         @foreach (var car in Model.Cars)
         {
-        <tr>
-            <td>@car.Year</td>
-            <td>@car.Manufacturer</td>
-            <td>@car.Model</td>
-            <td>@car.LicensePlate</td>
-            <td>@car.PricePerDay</td>
-            <td>
-                <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="EditVehicle" asp-route-id="@car.Id">Edit</a>
-                <a class="btn btn-sm btn-outline-danger" asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id="@car.Id">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>@car.Year</td>
+                <td>@car.Manufacturer</td>
+                <td>@car.Model</td>
+                <td>@car.LicensePlate</td>
+                <td>@car.PricePerDay</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="EditVehicle" asp-route-id="@car.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id="@car.Id">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

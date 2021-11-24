@@ -1,4 +1,4 @@
-﻿using Car_Renting.Models;
+﻿using Car_Renting.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
