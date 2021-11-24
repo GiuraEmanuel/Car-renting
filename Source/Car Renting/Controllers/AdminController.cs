@@ -40,27 +40,33 @@ namespace Car_Renting.Controllers
             return View(model);
         }
 
-        [HttpGet("DeleteVehicle/{id}")]
-        public async Task<IActionResult> DeleteVehicle(int id)
+        [HttpPost("AddVehicle")]
+        public async Task<IActionResult> AddVehicle(AddVehicleViewModel addVehicleViewModel)
         {
-            var car = await _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefaultAsync();
-
-            if (car == null)
+            if (!ModelState.IsValid)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist."));
+                return View(addVehicleViewModel);
             }
 
-            DeleteVehicleViewModel deleteVehicleViewModel = new()
-            {
-                Id = car.Id,
-                Year = car.Year,
-                Manufacturer = car.Manufacturer,
-                Model = car.Model,
-                LicensePlate = car.LicensePlate,
-                PricePerDay = car.PricePerDay
-            };
+            var car = new Car(addVehicleViewModel.Year.Value,
+                addVehicleViewModel.Manufacturer,
+                addVehicleViewModel.Model,
+                addVehicleViewModel.PricePerDay.Value,
+                addVehicleViewModel.LicensePlate);
 
-            return View(deleteVehicleViewModel);
+            _appDbContext.Cars.Add(car);
+
+            try
+            {
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 } sqlEx && sqlEx.Message.Contains("'IX_Cars_LicensePlate'"))
+            {
+                ModelState.AddModelError("LicensePlate", "A car with the same license plate already exists.");
+                return View(addVehicleViewModel);
+            }
+
+            return RedirectToAction(nameof(Inventory));
         }
 
         [HttpGet("EditVehicle/{id}")]
@@ -79,36 +85,6 @@ namespace Car_Renting.Controllers
             };
 
             return View(vmEditVehicle);
-        }
-
-        [HttpPost("AddVehicle")]
-        public async Task<IActionResult> AddVehicle(AddVehicleViewModel addVehicleViewModel)
-        {
-
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            var car = new Car(addVehicleViewModel.Year,
-                addVehicleViewModel.Manufacturer,
-                addVehicleViewModel.Model,
-                addVehicleViewModel.PricePerDay,
-                addVehicleViewModel.LicensePlate);
-
-            _appDbContext.Cars.Add(car);
-
-            try
-            {
-                await _appDbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 } sqlEx && sqlEx.Message.Contains("'IX_Cars_LicensePlate'"))
-            {
-                ModelState.AddModelError("LicensePlate", "A car with the same license plate already exists.");
-                return View();
-            }
-
-            return RedirectToAction(nameof(Inventory));
         }
 
         [HttpPost("EditVehicle/{id}")]
@@ -130,6 +106,29 @@ namespace Car_Renting.Controllers
             await _appDbContext.SaveChangesAsync();
 
             return RedirectToAction(nameof(Inventory));
+        }
+
+        [HttpGet("DeleteVehicle/{id}")]
+        public async Task<IActionResult> DeleteVehicle(int id)
+        {
+            var car = await _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefaultAsync();
+
+            if (car == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist."));
+            }
+
+            DeleteVehicleViewModel deleteVehicleViewModel = new()
+            {
+                Id = car.Id,
+                Year = car.Year,
+                Manufacturer = car.Manufacturer,
+                Model = car.Model,
+                LicensePlate = car.LicensePlate,
+                PricePerDay = car.PricePerDay
+            };
+
+            return View(deleteVehicleViewModel);
         }
 
         [HttpPost("DeleteVehicleConfirm/{id}")]
