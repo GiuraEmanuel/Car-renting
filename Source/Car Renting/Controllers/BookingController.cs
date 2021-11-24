@@ -47,17 +47,26 @@ namespace Car_Renting.Controllers
             return View(model);
         }
 
-        [HttpGet("Cancellations")]
-        public async Task<IActionResult> Cancellations()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Detail(int id)
         {
             var user = await GetCurrentUserAsync();
 
-            var isAdmin = await CheckIfAdmin(user);
+            var bookingInfo = await _appDbContext.Bookings
+                .Where(b => b.Id == id)
+                .Select(booking => new
+                {
+                    UserId = booking.UserId,
+                    VM = new BookingDetailsViewModel(booking.Id, booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
+                     booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber,
+                     booking.CancelDateTimeUtc, booking.CancelRefundAmount)
+                }).SingleOrDefaultAsync();
 
-            var bookings = await GetBookingInfosAsync(user.Id, isAdmin, BookingStatus.Cancelled);
-
-            var model = new BookingCancellationsViewModel(bookings, isAdmin);
-            return View(model);
+            if (user.Id == bookingInfo.UserId || await CheckIfAdmin(user))
+            {
+                return View(bookingInfo.VM);
+            }
+            return View("ErrorMessage", new ErrorMessageViewModel("You are not allowed to see the details of this booking."));
         }
 
         [AllowAnonymous]
@@ -112,28 +121,6 @@ namespace Car_Renting.Controllers
 
             var bookingConfirmVM = new BookingConfirmViewModel(car.Id, car.Manufacturer, car.Model, car.PricePerDay, startDate, endDate);
             return View(bookingConfirmVM);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Detail(int id)
-        {
-            var user = await GetCurrentUserAsync();
-
-            var bookingInfo = await _appDbContext.Bookings
-                .Where(b => b.Id == id)
-                .Select(booking => new
-                {
-                    UserId = booking.UserId,
-                    VM = new BookingDetailsViewModel(booking.Id, booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
-                     booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber,
-                     booking.CancelDateTimeUtc, booking.CancelRefundAmount)
-                }).SingleOrDefaultAsync();
-
-            if (user.Id == bookingInfo.UserId || await CheckIfAdmin(user))
-            {
-                return View(bookingInfo.VM);
-            }
-            return View("ErrorMessage", new ErrorMessageViewModel("You are not allowed to see the details of this booking."));
         }
 
         [HttpPost("Confirm")]
@@ -197,6 +184,19 @@ namespace Car_Renting.Controllers
             return RedirectToAction(nameof(Detail), new { id = booking.Id });
         }
 
+        [HttpGet("Cancellations")]
+        public async Task<IActionResult> Cancellations()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var isAdmin = await CheckIfAdmin(user);
+
+            var bookings = await GetBookingInfosAsync(user.Id, isAdmin, BookingStatus.Cancelled);
+
+            var model = new BookingCancellationsViewModel(bookings, isAdmin);
+            return View(model);
+        }
+
         private async Task<Car> GetActiveAndAvailableCar(int carId, DateTime startDate, DateTime endDate)
         {
             return await _appDbContext.Cars
@@ -243,6 +243,7 @@ namespace Car_Renting.Controllers
         private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(User);
 
         private Task<bool> CheckIfAdmin(User user) => _userManager.IsInRoleAsync(user, "Admin");
+
         private async Task<List<BookingInfo>> GetBookingInfosAsync(string userId, bool isAdmin, BookingStatus bookingStatus)
         {
             IQueryable<Booking> bookingsQuery = _appDbContext.Bookings;
