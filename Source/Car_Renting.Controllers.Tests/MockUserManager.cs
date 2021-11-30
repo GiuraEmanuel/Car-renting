@@ -16,9 +16,13 @@ namespace Car_Renting.Controllers.Tests
     {
         private HashSet<string> _adminUserIds;
 
-        public User CurrentUser {get; set; }
+        public User CurrentUser { get; set; }
 
         public AppDbContext Context { get; private set; }
+
+        public User AdminUser { get; set; }
+
+        public User NormalUser { get; set; }
 
         private MockUserManager()
             : base(null, null, null, null, null, null, null, null, null)
@@ -36,12 +40,17 @@ namespace Car_Renting.Controllers.Tests
 
         public User AddUser(string email, string firstName, string lastName, string phoneNumber, bool isAdmin)
         {
+            var user = new User { Id = email, UserName = email, Email = email, FirstName = firstName, LastName = lastName, PhoneNumber = phoneNumber };
+
             if (isAdmin)
             {
-                 _adminUserIds.Add(email);
+                _adminUserIds.Add(email);
+                AdminUser = user;
             }
-
-            var user = new User {Id = email , UserName = email, Email = email, FirstName = firstName, LastName = lastName, PhoneNumber = phoneNumber };
+            else
+            {
+                NormalUser = user;
+            }
 
             Context.Users.Add(user);
             Context.SaveChanges();
