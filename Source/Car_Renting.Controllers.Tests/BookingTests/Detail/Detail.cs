@@ -37,6 +37,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             // past booking so refund should be 0
             model.RefundAmountIfCancelling.ShouldBe(0);
             model.Email.ShouldBe("jason.bourne@gmail.com");
+            model.Model.ShouldBe(cars[1].Model);
         }
 
         [TestMethod]
@@ -92,6 +93,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             // partial refund for 2 days since booking started today
             model.RefundAmountIfCancelling.ShouldBe(40);
             model.Email.ShouldBe("jason.bourne@gmail.com");
+            model.Model.ShouldBe(cars[2].Model);
         }
 
         [TestMethod]
@@ -122,6 +124,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             // past booking so refund should be 0
             model.RefundAmountIfCancelling.ShouldBe(0);
             model.Email.ShouldBe("jason.bourne@gmail.com");
+            model.Model.ShouldBe(cars[1].Model);
         }
     }
 }
