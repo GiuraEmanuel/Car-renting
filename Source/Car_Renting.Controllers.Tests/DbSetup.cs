@@ -7,6 +7,9 @@ namespace Car_Renting.Controllers.Tests
 {
     public static class DbSetup
     {
+        /// <summary>
+        /// Initializes the database by deleting the existing database and recreating it.
+        /// </summary>
         public static AppDbContext Initialize()
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
@@ -17,17 +20,20 @@ namespace Car_Renting.Controllers.Tests
             return dbContext;
         }
 
-        public static MockUserManager SeedUsers(AppDbContext context)
-        {
-            var userManager = MockUserManager.Create(context);
-            userManager.AddUser("giura.emanuel@gmail.com", "Giura", "Emanuel", "222555666", true); // admin
-            userManager.AddUser("jason.bourne@gmail.com", "Jason", "Bourne", "555777999", false); // normal user;
-
-            context.SaveChanges();
-            return userManager;
-        }
         /// <summary>
-        /// Adds a list of 4 cars to the database.
+        /// Adds and admin and normal user to the database.
+        /// </summary>
+        public static (User Admin, User User) SeedUsers(MockUserManager userManager)
+        {
+            var admin = userManager.AddUser("giura.emanuel@gmail.com", "Giura", "Emanuel", "222555666", true); // admin
+            var user = userManager.AddUser("jason.bourne@gmail.com", "Jason", "Bourne", "555777999", false); // normal user;
+
+            userManager.Context.SaveChanges();
+            return (admin, user);
+        }
+
+        /// <summary>
+        /// Adds a list of 4 cars to the database. All the cars have unique models.
         /// </summary>
         /// <param name="context">Database context.</param>
         /// <returns> Returns a list of 4 cars containing data that will have tests performed on. </returns>
@@ -52,31 +58,29 @@ namespace Car_Renting.Controllers.Tests
         }
 
         /// <summary>
-        /// <para>Adds bookings to both user and admin and returns them in a list in the following order:</para>
-        /// <para>Admin booking: StartDate: 2021-11-24 -- EndDate: 2021-11-29 -- Total Cost: 50</para>
-        /// <para>User past booking: StartDate: 2021-10-10 -- EndDate: 2021-10-29 -- Total Cost: 40</para>
-        /// <para>User current booking: StartDate: today -- EndDate: 3 days from today -- Total Cost: 60</para>
-        /// <para>User future booking: StartDate: 15 days from today -- EndDate: 20 days from today -- Total Cost: 20</para>
-        /// <para></para>
+        /// <para>Adds bookings to the provided user and returns them in a list in the following order:</para>
+        /// <para>Past booking: StartDate: 2021-10-10 -- EndDate: 2021-10-29 -- Total Cost: 40</para>
+        /// <para>Current booking: StartDate: today -- EndDate: 3 days from today -- Total Cost: 60</para>
+        /// <para>Future booking: StartDate: 15 days from today -- EndDate: 20 days from today -- Total Cost: 20</para>
         /// </summary>
-        /// <param name="userManager"> Gets users.</param>
-        /// <param name="car"> Car details.</param>
-        public static List<Booking> SeedBookings(MockUserManager userManager, Car car)
+        /// <param name="context">The db context.</param>
+        /// <param name="userManager">The user to add bookings for.</param>
+        /// <param name="car">The car to book.</param>
+        public static List<Booking> SeedBookings(AppDbContext context, User user, Car car)
         {
             var bookings = new List<Booking>
             {
-                new Booking(userManager.AdminUser.Id,car.Id, new DateTime(2021,11,24), new DateTime(2021,11,29),50),
-                new Booking(userManager.NormalUser.Id,car.Id, new DateTime(2021,10,10), new DateTime(2021,10,29),40),
-                new Booking(userManager.NormalUser.Id,car.Id, DateTime.Today, DateTime.Today.AddDays(3),60),
-                new Booking(userManager.NormalUser.Id,car.Id, DateTime.Today.AddDays(15), DateTime.Today.AddDays(20),20),
+                new Booking(user.Id, car.Id, new DateTime(2021,10,10), new DateTime(2021,10,29),40),
+                new Booking(user.Id, car.Id, DateTime.Today, DateTime.Today.AddDays(3),60),
+                new Booking(user.Id, car.Id, DateTime.Today.AddDays(15), DateTime.Today.AddDays(20),20),
             };
 
             foreach (var booking in bookings)
             {
-                userManager.Context.Bookings.Add(booking);
+                context.Bookings.Add(booking);
             }
 
-            userManager.Context.SaveChanges();
+            context.SaveChanges();
             return bookings;
         }
     }

@@ -20,10 +20,6 @@ namespace Car_Renting.Controllers.Tests
 
         public AppDbContext Context { get; private set; }
 
-        public User AdminUser { get; set; }
-
-        public User NormalUser { get; set; }
-
         private MockUserManager()
             : base(null, null, null, null, null, null, null, null, null)
         {
@@ -46,11 +42,6 @@ namespace Car_Renting.Controllers.Tests
             if (isAdmin)
             {
                 _adminUserIds.Add(email);
-                AdminUser = user;
-            }
-            else
-            {
-                NormalUser = user;
             }
 
             Context.Users.Add(user);
