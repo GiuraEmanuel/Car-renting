@@ -17,7 +17,7 @@ namespace Car_Renting.Controllers.Tests
             return dbContext;
         }
 
-        public static MockUserManager SeedUsers(this AppDbContext context)
+        public static MockUserManager SeedUsers(AppDbContext context)
         {
             var userManager = MockUserManager.Create(context);
             userManager.AddUser("giura.emanuel@gmail.com", "Giura", "Emanuel", "222555666", true); // admin
@@ -31,7 +31,7 @@ namespace Car_Renting.Controllers.Tests
         /// </summary>
         /// <param name="context">Database context.</param>
         /// <returns> Returns a list of 4 cars containing data that will have tests performed on. </returns>
-        public static List<Car> SeedCars(this AppDbContext context)
+        public static List<Car> SeedCars(AppDbContext context)
         {
             var cars = new List<Car>
             {
@@ -61,7 +61,7 @@ namespace Car_Renting.Controllers.Tests
         /// </summary>
         /// <param name="userManager"> Gets users.</param>
         /// <param name="car"> Car details.</param>
-        public static List<Booking> SeedBookings(this MockUserManager userManager, Car car)
+        public static List<Booking> SeedBookings(MockUserManager userManager, Car car)
         {
             var bookings = new List<Booking>
             {

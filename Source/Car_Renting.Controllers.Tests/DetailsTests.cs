@@ -14,8 +14,8 @@ namespace Car_Renting.Controllers.Tests
         {
             // Arrange
             using var context = DbSetup.Initialize();
-            var userManager = context.SeedUsers();
-            var cars = context.SeedCars();
+            var userManager = DbSetup.SeedUsers(context);
+            var cars = DbSetup.SeedCars(context);
             var bookings = DbSetup.SeedBookings(userManager, cars[1]);
             userManager.CurrentUser = userManager.NormalUser;
 
@@ -42,8 +42,8 @@ namespace Car_Renting.Controllers.Tests
         {
             // Arrange
             using var context = DbSetup.Initialize();
-            var userManager = context.SeedUsers();
-            var cars = context.SeedCars();
+            var userManager = DbSetup.SeedUsers(context);
+            var cars = DbSetup.SeedCars(context);
             var bookings = DbSetup.SeedBookings(userManager, cars[0]);
             userManager.CurrentUser = userManager.NormalUser;
 
@@ -65,8 +65,8 @@ namespace Car_Renting.Controllers.Tests
         {
             // Arrange
             using var context = DbSetup.Initialize();
-            var userManager = context.SeedUsers();
-            var cars = context.SeedCars();
+            var userManager = DbSetup.SeedUsers(context);
+            var cars = DbSetup.SeedCars(context);
             var bookings = DbSetup.SeedBookings(userManager,cars[2]);
             userManager.CurrentUser = userManager.AdminUser;
 
