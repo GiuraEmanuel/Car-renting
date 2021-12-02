@@ -32,6 +32,7 @@ namespace Car_Renting.Controllers.Tests
             model.BookingId.ShouldBe(bookings[1].Id);
             model.TotalNumberOfDays.ShouldBe(19);
             model.CancelRefundAmount.ShouldBe(null);
+            // past booking so refund should be 0
             model.RefundAmountIfCancelling.ShouldBe(0);
             model.Email.ShouldBe("jason.bourne@gmail.com");
         }
@@ -57,6 +58,34 @@ namespace Car_Renting.Controllers.Tests
 
             var model = viewResult.Model.ShouldBeOfType<ErrorMessageViewModel>();
             model.Message.ShouldBe("You are not allowed to see the details of this booking.");
+        }
+
+        [TestMethod]
+        public async Task AdminChecksUsersBookings()
+        {
+            // Arrange
+            using var context = DbSetup.Initialize();
+            var userManager = context.SeedUsers();
+            var cars = context.SeedCars();
+            var bookings = DbSetup.SeedBookings(userManager,cars[2]);
+            userManager.CurrentUser = userManager.AdminUser;
+
+            var bookingController = new BookingController(context, userManager, null);
+
+            // Act
+            var result = await bookingController.Detail(bookings[2].Id);
+
+            // Assert
+            var viewResult = result.ShouldBeOfType<ViewResult>();
+            viewResult.ViewName.ShouldBe(null);
+
+            var model = viewResult.Model.ShouldBeOfType<BookingDetailsViewModel>();
+            model.BookingId.ShouldBe(bookings[2].Id);
+            model.TotalNumberOfDays.ShouldBe(3);
+            model.CancelRefundAmount.ShouldBe(null);
+            // partial refund for 2 days since booking started today
+            model.RefundAmountIfCancelling.ShouldBe(40);
+            model.Email.ShouldBe("jason.bourne@gmail.com");
         }
     }
 }

@@ -53,10 +53,10 @@ namespace Car_Renting.Controllers.Tests
 
         /// <summary>
         /// <para>Adds bookings to both user and admin and returns them in a list in the following order:</para>
-        /// <para>Admin booking: StartDate: 2021-11-24 -- EndDate: 2021-11-29 -- Cost: 50</para>
-        /// <para>User past booking: StartDate: 2021-10-10 -- EndDate: 2021-10-29 -- Cost: 40</para>
-        /// <para>User current booking: StartDate: today -- EndDate: tomorrow -- Cost: 35</para>
-        /// <para>User future booking: StartDate: 15 days from today -- EndDate: 20 days from today -- Cost: 20</para>
+        /// <para>Admin booking: StartDate: 2021-11-24 -- EndDate: 2021-11-29 -- Total Cost: 50</para>
+        /// <para>User past booking: StartDate: 2021-10-10 -- EndDate: 2021-10-29 -- Total Cost: 40</para>
+        /// <para>User current booking: StartDate: today -- EndDate: 3 days from today -- Total Cost: 60</para>
+        /// <para>User future booking: StartDate: 15 days from today -- EndDate: 20 days from today -- Total Cost: 20</para>
         /// <para></para>
         /// </summary>
         /// <param name="userManager"> Gets users.</param>
@@ -67,7 +67,7 @@ namespace Car_Renting.Controllers.Tests
             {
                 new Booking(userManager.AdminUser.Id,car.Id, new DateTime(2021,11,24), new DateTime(2021,11,29),50),
                 new Booking(userManager.NormalUser.Id,car.Id, new DateTime(2021,10,10), new DateTime(2021,10,29),40),
-                new Booking(userManager.NormalUser.Id,car.Id, DateTime.Today, DateTime.Today.AddDays(1),35),
+                new Booking(userManager.NormalUser.Id,car.Id, DateTime.Today, DateTime.Today.AddDays(3),60),
                 new Booking(userManager.NormalUser.Id,car.Id, DateTime.Today.AddDays(15), DateTime.Today.AddDays(20),20),
             };
 
