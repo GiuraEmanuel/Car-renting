@@ -23,14 +23,15 @@ namespace Car_Renting.Controllers.Tests
             userManager.AddUser("giura.emanuel@gmail.com", "Giura", "Emanuel", "222555666", true); // admin
             userManager.AddUser("jason.bourne@gmail.com", "Jason", "Bourne", "555777999", false); // normal user;
 
+            context.SaveChanges();
             return userManager;
         }
         /// <summary>
         /// Adds a list of 4 cars to the database.
         /// </summary>
-        /// <param name="appDbContext">Database context.</param>
-        /// <returns> Returns a list of cars containing data that will have tests performed on. </returns>
-        public static List<Car> SeedCars(this AppDbContext appDbContext)
+        /// <param name="context">Database context.</param>
+        /// <returns> Returns a list of 4 cars containing data that will have tests performed on. </returns>
+        public static List<Car> SeedCars(this AppDbContext context)
         {
             var cars = new List<Car>
             {
@@ -42,12 +43,14 @@ namespace Car_Renting.Controllers.Tests
 
             foreach (var car in cars)
             {
-                appDbContext.Cars.Add(car);
+                context.Cars.Add(car);
             }
+
+            context.SaveChanges();
 
             return cars;
         }
-        
+
         /// <summary>
         /// <para>Adds bookings to both user and admin and returns them in a list in the following order:</para>
         /// <para>Admin booking: StartDate: 2021-11-24 -- EndDate: 2021-11-29 -- Cost: 50</para>
@@ -68,6 +71,12 @@ namespace Car_Renting.Controllers.Tests
                 new Booking(userManager.NormalUser.Id,car.Id, DateTime.Today.AddDays(15), DateTime.Today.AddDays(20),20),
             };
 
+            foreach (var booking in bookings)
+            {
+                userManager.Context.Bookings.Add(booking);
+            }
+
+            userManager.Context.SaveChanges();
             return bookings;
         }
     }

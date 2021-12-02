@@ -34,6 +34,7 @@ namespace Car_Renting.Controllers.Tests
         {
             // UserManager methods that are used are fully mocked out so we don't need a functional base class
             var userManager = (MockUserManager)FormatterServices.GetUninitializedObject(typeof(MockUserManager));
+            userManager._adminUserIds = new HashSet<string>();
             userManager.Context = context;
             return userManager;
         }
@@ -65,7 +66,7 @@ namespace Car_Renting.Controllers.Tests
 
         public override Task<bool> IsInRoleAsync(User user, string role)
         {
-            return Task.FromResult(role == "Admin" && _adminUserIds.Contains(user.Email)));
+            return Task.FromResult(role == "Admin" && _adminUserIds.Contains(user.Email));
         }
     }
 }
