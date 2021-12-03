@@ -1,13 +1,9 @@
 ﻿using Car_Renting.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Car_Renting.Controllers.Tests
