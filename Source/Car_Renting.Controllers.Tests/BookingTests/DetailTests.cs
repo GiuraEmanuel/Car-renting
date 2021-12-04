@@ -62,7 +62,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             viewResult.ViewName.ShouldBe("ErrorMessage");
 
             var model = viewResult.Model.ShouldBeOfType<ErrorMessageViewModel>();
-            model.Message.ShouldBe("You are not allowed to see the details of this booking.");
+            model.Message.ShouldBe(ErrorMessages.BookingAccessDenied);
         }
 
         [TestMethod]

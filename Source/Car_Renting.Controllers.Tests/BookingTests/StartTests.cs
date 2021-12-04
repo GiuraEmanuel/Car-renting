@@ -148,7 +148,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(null);
             model.EndDate.ShouldBe(DateTime.Today);
-            model.ErrorMessage.ShouldBe("Start date can't be empty.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.EmptyStartDate);
         }
 
         [TestMethod]
@@ -167,7 +167,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(null);
-            model.ErrorMessage.ShouldBe("End date can't be empty.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.EmptyEndDate);
         }
 
         [TestMethod]
@@ -186,7 +186,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today.AddDays(-3));
             model.EndDate.ShouldBe(DateTime.Today);
-            model.ErrorMessage.ShouldBe("Start date can't preceed the current day.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.StartDateLessThanToday);
         }
 
         [TestMethod]
@@ -205,7 +205,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(DateTime.Today.AddDays(-1));
-            model.ErrorMessage.ShouldBe("End date must follow start date.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.EndDateLessThanStartDate);
         }
 
         [TestMethod]
@@ -225,7 +225,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(DateTime.Today.AddDays(1));
-            model.ErrorMessage.ShouldBe("Minimum booking length is 1 day.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.StartDateAndEndDateAreEqual);
         }
     }
 }
