@@ -20,7 +20,7 @@ namespace Car_Renting.Controllers
     [Route("Bookings")]
     public class BookingController : Controller
     {
-        const string StartBookingAgainMessage = " Please go back and start your booking again. We apologize for the inconvenience.";
+        
 
         private readonly AppDbContext _appDbContext;
 
@@ -66,7 +66,7 @@ namespace Car_Renting.Controllers
             {
                 return View(bookingInfo.VM);
             }
-            return View("ErrorMessage", new ErrorMessageViewModel("You are not allowed to see the details of this booking."));
+            return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.BookingAccessDenied));
         }
 
         [AllowAnonymous]
@@ -108,7 +108,7 @@ namespace Car_Renting.Controllers
 
             if (!TryValidateDateRange(startDate, endDate, out string? error))
             {
-                var errorModel = new ErrorMessageViewModel(error + StartBookingAgainMessage);
+                var errorModel = new ErrorMessageViewModel(error + ErrorMessages.StartBookingAgainSuffix);
                 return View("ErrorMessage", errorModel);
             }
 
@@ -116,7 +116,7 @@ namespace Car_Renting.Controllers
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car is no longer available." + StartBookingAgainMessage));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarUnavailable + ErrorMessages.StartBookingAgainSuffix));
             }
 
             var bookingConfirmVM = new BookingConfirmViewModel(car.Id, car.Manufacturer, car.Model, car.PricePerDay, startDate, endDate);
@@ -128,7 +128,7 @@ namespace Car_Renting.Controllers
         {
             if (!TryValidateDateRange(bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, out string? error))
             {
-                var errorModel = new ErrorMessageViewModel(error + StartBookingAgainMessage);
+                var errorModel = new ErrorMessageViewModel(error + ErrorMessages.StartBookingAgainSuffix);
                 return View("ErrorMessage", errorModel);
             }
 
@@ -136,13 +136,13 @@ namespace Car_Renting.Controllers
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car is no longer available." + StartBookingAgainMessage));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarUnavailable + ErrorMessages.StartBookingAgainSuffix));
             }
 
             if (bookingConfirmPostModel.TotalCost != bookingConfirmPostModel.TotalNumberOfDays * car.PricePerDay)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("The price of the vehicle you are booking has changed." +
-                    StartBookingAgainMessage));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarPriceChanged +
+                    ErrorMessages.StartBookingAgainSuffix));
             }
             var userId = _userManager.GetUserId(HttpContext.User);
             // [Credit card would be processed here in a real application]
@@ -162,19 +162,19 @@ namespace Car_Renting.Controllers
 
             if (booking == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Booking not found."));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.BookingNotFound));
             }
 
             if (booking.Status == BookingStatus.Cancelled)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Booking has already been canceled"));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.BookingAlreadyCancelled));
             }
 
             var refundAmount = Booking.CalculateRefund(booking.StartDate, booking.EndDate, booking.TotalCost);
 
             if (refundAmount != cancelPostModel.RefundAmount)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Refund amount has changed, please go back and cancel your booking again."));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.RefundAmountChanged));
             }
 
             booking.Cancel(refundAmount);
@@ -209,11 +209,11 @@ namespace Car_Renting.Controllers
         {
             if (startDate == null)
             {
-                error = "Start date can't be empty.";
+                error = ErrorMessages.EmptyStartDate;
             }
             else if (endDate == null)
             {
-                error = "End date can't be empty.";
+                error = ErrorMessages.EmptyEndDate;
             }
             else if (startDate.Value.TimeOfDay != TimeSpan.Zero || endDate.Value.TimeOfDay != TimeSpan.Zero)
             {
@@ -221,22 +221,21 @@ namespace Car_Renting.Controllers
             }
             else if (startDate < DateTime.Today)
             {
-                error = "Start date can't preceed the current day.";
+                error = ErrorMessages.StartDateLessThanToday;
             }
             else if (endDate < startDate)
             {
-                error = "End date must follow start date.";
+                error = ErrorMessages.EndDateLessThanStartDate;
             }
             else if (startDate == endDate)
             {
-                error = "Minimum booking length is 1 day.";
+                error = ErrorMessages.StartDateAndEndDateAreEqual;
             }
             else
             {
                 error = null;
                 return true;
             }
-
             return false;
         }
 
