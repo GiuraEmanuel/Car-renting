@@ -222,6 +222,7 @@ namespace Car_Renting.Controllers
             }
             else if (startDate.Value.TimeOfDay != TimeSpan.Zero || endDate.Value.TimeOfDay != TimeSpan.Zero)
             {
+                // this indicates a bug in our program so throw instead of returning a user error message
                 throw new InvalidDataException("Unexpected time component in date.");
             }
             else if (startDate < DateTime.Today)
