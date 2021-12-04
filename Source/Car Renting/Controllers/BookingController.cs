@@ -62,6 +62,11 @@ namespace Car_Renting.Controllers
                      booking.CancelDateTimeUtc, booking.CancelRefundAmount)
                 }).SingleOrDefaultAsync();
 
+            if (bookingInfo == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.BookingNotFound));
+            }
+
             if (user.Id == bookingInfo.UserId || await CheckIfAdmin(user))
             {
                 return View(bookingInfo.VM);
