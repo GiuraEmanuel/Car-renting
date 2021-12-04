@@ -62,7 +62,7 @@ namespace Car_Renting.Controllers
             }
             catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 } sqlEx && sqlEx.Message.Contains("'IX_Cars_LicensePlate'"))
             {
-                ModelState.AddModelError("LicensePlate", "A car with the same license plate already exists.");
+                ModelState.AddModelError("LicensePlate", ErrorMessages.SameLicensePlate);
                 return View(addVehicleViewModel);
             }
 
@@ -75,7 +75,7 @@ namespace Car_Renting.Controllers
             var car = await _appDbContext.Cars.SingleOrDefaultAsync(c => c.Id == id);
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarDoesNotExist));
             }
 
             var vmEditVehicle = new EditVehicleViewModel
@@ -99,7 +99,7 @@ namespace Car_Renting.Controllers
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarDoesNotExist));
             }
 
             car.PricePerDay = editVehiclePriceViewModel.PricePerDay;
@@ -115,7 +115,7 @@ namespace Car_Renting.Controllers
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist."));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarDoesNotExist));
             }
 
             DeleteVehicleViewModel deleteVehicleViewModel = new()
@@ -138,7 +138,7 @@ namespace Car_Renting.Controllers
 
             if (car == null)
             {
-                return View("ErrorMessage", new ErrorMessageViewModel("Car does not exist"));
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarDoesNotExist));
             }
 
             car.Status = CarStatus.Deleted;
