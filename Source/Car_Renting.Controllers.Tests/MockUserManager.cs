@@ -55,5 +55,10 @@ namespace Car_Renting.Controllers.Tests
         {
             return Task.FromResult(role == "Admin" && _adminUserIds.Contains(user.Email));
         }
+
+        public override string GetUserId(ClaimsPrincipal principal)
+        {
+            return CurrentUser.Id;
+        }
     }
 }

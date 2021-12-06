@@ -149,7 +149,7 @@ namespace Car_Renting.Controllers
                 return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarPriceChanged +
                     ErrorMessages.StartBookingAgainSuffix));
             }
-            var userId = _userManager.GetUserId(HttpContext.User);
+            var userId = _userManager.GetUserId(User);
             // [Credit card would be processed here in a real application]
             var booking = new Booking(userId, bookingConfirmPostModel.CarId,
                     bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalCost);
