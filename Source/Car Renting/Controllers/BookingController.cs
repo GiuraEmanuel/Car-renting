@@ -105,16 +105,16 @@ namespace Car_Renting.Controllers
         [HttpGet("Confirm")]
         public async Task<IActionResult> Confirm(int carId, DateTime startDate, DateTime endDate)
         {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                string url = Url.Action("Confirm", new { carId, startDate, endDate });
-                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = url });
-            }
-
             if (!TryValidateDateRange(startDate, endDate, out string? error))
             {
                 var errorModel = new ErrorMessageViewModel(error + ErrorMessages.StartBookingAgainSuffix);
                 return View("ErrorMessage", errorModel);
+            }
+
+            if (!_signInManager.IsSignedIn(User))
+            {
+                string url = Url.Action("Confirm", new { carId, startDate, endDate });
+                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = url });
             }
 
             Car car = await GetActiveAndAvailableCar(carId, startDate, endDate);
