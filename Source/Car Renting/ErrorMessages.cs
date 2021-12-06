@@ -3,7 +3,7 @@
     public static class ErrorMessages
     {
         // Booking controller error messages
-        public const string StartBookingAgainSuffix = "Please go back and start your booking again. We apologize for the inconvenience.";
+        public const string StartBookingAgainSuffix = " Please go back and start your booking again. We apologize for the inconvenience.";
         public const string BookingAccessDenied = "You are not allowed to see the details of this booking.";
         public const string EmptyStartDate = "Start date can't be empty.";
         public const string EmptyEndDate = "End date can't be empty.";
