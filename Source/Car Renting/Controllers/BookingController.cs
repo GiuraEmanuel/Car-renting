@@ -62,6 +62,11 @@ namespace Car_Renting.Controllers
                      booking.CancelDateTimeUtc, booking.CancelRefundAmount)
                 }).SingleOrDefaultAsync();
 
+            if (bookingInfo == null)
+            {
+                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.BookingNotFound));
+            }
+
             if (user.Id == bookingInfo.UserId || await CheckIfAdmin(user))
             {
                 return View(bookingInfo.VM);
@@ -100,16 +105,16 @@ namespace Car_Renting.Controllers
         [HttpGet("Confirm")]
         public async Task<IActionResult> Confirm(int carId, DateTime startDate, DateTime endDate)
         {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                string url = Url.Action("Confirm", new { carId, startDate, endDate });
-                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = url });
-            }
-
             if (!TryValidateDateRange(startDate, endDate, out string? error))
             {
                 var errorModel = new ErrorMessageViewModel(error + ErrorMessages.StartBookingAgainSuffix);
                 return View("ErrorMessage", errorModel);
+            }
+
+            if (!_signInManager.IsSignedIn(User))
+            {
+                string url = Url.Action("Confirm", new { carId, startDate, endDate });
+                return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = url });
             }
 
             Car car = await GetActiveAndAvailableCar(carId, startDate, endDate);
@@ -144,7 +149,7 @@ namespace Car_Renting.Controllers
                 return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarPriceChanged +
                     ErrorMessages.StartBookingAgainSuffix));
             }
-            var userId = _userManager.GetUserId(HttpContext.User);
+            var userId = _userManager.GetUserId(User);
             // [Credit card would be processed here in a real application]
             var booking = new Booking(userId, bookingConfirmPostModel.CarId,
                     bookingConfirmPostModel.StartDate, bookingConfirmPostModel.EndDate, bookingConfirmPostModel.TotalCost);
@@ -217,6 +222,7 @@ namespace Car_Renting.Controllers
             }
             else if (startDate.Value.TimeOfDay != TimeSpan.Zero || endDate.Value.TimeOfDay != TimeSpan.Zero)
             {
+                // this indicates a bug in our program so throw instead of returning a user error message
                 throw new InvalidDataException("Unexpected time component in date.");
             }
             else if (startDate < DateTime.Today)

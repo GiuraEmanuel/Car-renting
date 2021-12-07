@@ -62,7 +62,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             viewResult.ViewName.ShouldBe("ErrorMessage");
 
             var model = viewResult.Model.ShouldBeOfType<ErrorMessageViewModel>();
-            model.Message.ShouldBe("You are not allowed to see the details of this booking.");
+            model.Message.ShouldBe(ErrorMessages.BookingAccessDenied);
         }
 
         [TestMethod]
@@ -128,6 +128,28 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             model.RefundAmountIfCancelling.ShouldBe(0);
             model.Email.ShouldBe("jason.bourne@gmail.com");
             model.Model.ShouldBe(cars[1].Model);
+        }
+
+        [TestMethod]
+        public async Task BookingNotFound()
+        {
+            // Arrange
+            using var context = DbSetup.Initialize();
+            var userManager = MockUserManager.Create(context);
+            var (admin, user) = DbSetup.SeedUsers(userManager);
+            userManager.CurrentUser = user;
+
+            var bookingController = new BookingController(context, userManager, null);
+
+            // Act
+            var result = await bookingController.Detail(-1);
+
+            // Assert
+            var viewResult = result.ShouldBeOfType<ViewResult>();
+            viewResult.ViewName.ShouldBe("ErrorMessage");
+
+            var model = viewResult.Model.ShouldBeOfType<ErrorMessageViewModel>();
+            model.Message.ShouldBe(ErrorMessages.BookingNotFound);
         }
     }
 }

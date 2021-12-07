@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -110,7 +111,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             model.StartDate.ShouldBe(DateTime.Today.AddDays(20));
             model.EndDate.ShouldBe(DateTime.Today.AddDays(25));
             model.Cars.ShouldNotBeNull();
-            model.Cars.Select(c=> c.Model).ShouldBe(new[] { cars[0].Model, cars[1].Model, cars[2].Model }, ignoreOrder: true);
+            model.Cars.Select(c => c.Model).ShouldBe(new[] { cars[0].Model, cars[1].Model, cars[2].Model }, ignoreOrder: true);
         }
 
         [TestMethod]
@@ -148,7 +149,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(null);
             model.EndDate.ShouldBe(DateTime.Today);
-            model.ErrorMessage.ShouldBe("Start date can't be empty.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.EmptyStartDate);
         }
 
         [TestMethod]
@@ -167,7 +168,19 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(null);
-            model.ErrorMessage.ShouldBe("End date can't be empty.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.EmptyEndDate);
+        }
+
+        [TestMethod]
+        public async Task ThrowsIfDatesContainTime()
+        {
+            // Arrange
+            var bookingController = new BookingController(null, null, null);
+            var startDate = DateTime.Today;
+            var endDate = DateTime.Today.AddDays(4);
+            // Act/Assert
+            await Should.ThrowAsync<InvalidDataException>(() => bookingController.Start(startDate.AddHours(1), endDate));
+            await Should.ThrowAsync<InvalidDataException>(() => bookingController.Start(startDate, endDate.AddHours(1)));
         }
 
         [TestMethod]
@@ -186,7 +199,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today.AddDays(-3));
             model.EndDate.ShouldBe(DateTime.Today);
-            model.ErrorMessage.ShouldBe("Start date can't preceed the current day.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.StartDateLessThanToday);
         }
 
         [TestMethod]
@@ -205,7 +218,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(DateTime.Today.AddDays(-1));
-            model.ErrorMessage.ShouldBe("End date must follow start date.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.EndDateLessThanStartDate);
         }
 
         [TestMethod]
@@ -225,7 +238,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(DateTime.Today.AddDays(1));
-            model.ErrorMessage.ShouldBe("Minimum booking length is 1 day.");
+            model.ErrorMessage.ShouldBe(ErrorMessages.StartDateAndEndDateAreEqual);
         }
     }
 }
