@@ -80,7 +80,7 @@ namespace Car_Renting.Controllers
         {
             if (startDate == null && endDate == null)
             {
-                return View(new BookingStartViewModel());
+                return View(new BookingStartViewModel(DateTime.Today, DateTime.Today.AddDays(1)));
             }
             else if (!TryValidateDateRange(startDate, endDate, out string? error))
             {
@@ -89,7 +89,7 @@ namespace Car_Renting.Controllers
                     endDate = startDate!.Value.AddDays(1);
                 }
 
-                var errorModel = new BookingStartViewModel(startDate, endDate, error);
+                var errorModel = new BookingStartViewModel(startDate ?? DateTime.Today, endDate ?? DateTime.Today.AddDays(1), error);
                 return View(errorModel);
             }
 

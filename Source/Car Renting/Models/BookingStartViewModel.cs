@@ -13,18 +13,14 @@ namespace Car_Renting.Models
         /// </summary>
         public IList<Car>? Cars { get; }
 
-        public DateTime? StartDate { get;}
+        public DateTime StartDate { get; }
 
-        public DateTime? EndDate { get; }
+        public DateTime EndDate { get; }
 
-        public string? ErrorMessage { get;}
+        public string? ErrorMessage { get; }
 
-        public BookingStartViewModel()
-        {
 
-        }
-
-        public BookingStartViewModel(DateTime? startDate, DateTime? endDate, string errorMessage)
+        public BookingStartViewModel(DateTime startDate, DateTime endDate, string errorMessage)
         {
             StartDate = startDate;
             EndDate = endDate;
@@ -35,14 +31,18 @@ namespace Car_Renting.Models
         /// If the value is null it means the user didn't enter the startDate and endDate yet therefore there is nothing to show.
         /// If the value is non-null but has 0 elements it means there are no available vehicles for the selected range and send the appropriate message to the user.
         ///</param>
-        public BookingStartViewModel(DateTime startDate, DateTime endDate,IEnumerable<Car> cars)
+        public BookingStartViewModel(DateTime startDate, DateTime endDate, IEnumerable<Car>? cars = null)
         {
             StartDate = startDate;
             EndDate = endDate;
-            Cars = cars.ToList();
-            if (Cars.Count == 0)
+
+            if (cars != null)
             {
-                ErrorMessage = "There are no available cars in the specified date range.";
+                Cars = cars.ToList();
+                if (Cars.Count == 0)
+                {
+                    ErrorMessage = "There are no available cars in the specified date range.";
+                }
             }
         }
 

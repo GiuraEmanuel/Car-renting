@@ -129,8 +129,8 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             viewResult.ViewName.ShouldBe(null);
 
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
-            model.StartDate.ShouldBe(null);
-            model.EndDate.ShouldBe(null);
+            model.StartDate.ShouldBe(DateTime.Today);
+            model.EndDate.ShouldBe(DateTime.Today.AddDays(1));
         }
 
         [TestMethod]
@@ -147,7 +147,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             viewResult.ViewName.ShouldBe(null);
 
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
-            model.StartDate.ShouldBe(null);
+            model.StartDate.ShouldBe(DateTime.Today);
             model.EndDate.ShouldBe(DateTime.Today);
             model.ErrorMessage.ShouldBe(ErrorMessages.EmptyStartDate);
         }
@@ -167,7 +167,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
 
             var model = viewResult.Model.ShouldBeOfType<BookingStartViewModel>();
             model.StartDate.ShouldBe(DateTime.Today);
-            model.EndDate.ShouldBe(null);
+            model.EndDate.ShouldBe(DateTime.Today.AddDays(1));
             model.ErrorMessage.ShouldBe(ErrorMessages.EmptyEndDate);
         }
 
