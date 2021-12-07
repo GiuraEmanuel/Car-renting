@@ -28,11 +28,35 @@
                 <td>@car.PricePerDay</td>
                 <td>
                     <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="EditVehicle" asp-route-id="@car.Id">Edit</a>
-                    <a class="btn btn-sm btn-outline-danger" asp-controller="Admin" asp-action="DeleteVehicle" asp-route-id="@car.Id">Delete</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="@("#deleteModal" + car.Id)">Delete</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@foreach (var car in Model.Cars)
+{
+    <div class="modal fade" id="@("deleteModal" + car.Id)" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete the @car.Year @car.Manufacturer @car.Model with license plate @car.LicensePlate?
+                </div>
+                <form class="modal-footer" asp-controller="Admin" asp-action="DeleteVehicle" method="post" asp-route-id="@car.Id">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <input type="submit" value="Yes" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
 
 <a class="btn btn-primary" asp-controller="Admin" asp-action="AddVehicle">Add new car</a>

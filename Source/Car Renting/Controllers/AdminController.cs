@@ -108,31 +108,8 @@ namespace Car_Renting.Controllers
             return RedirectToAction(nameof(Inventory));
         }
 
-        [HttpGet("DeleteVehicle/{id}")]
+        [HttpPost("DeleteVehicle/{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
-        {
-            var car = await _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefaultAsync();
-
-            if (car == null)
-            {
-                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarDoesNotExist));
-            }
-
-            DeleteVehicleViewModel deleteVehicleViewModel = new()
-            {
-                Id = car.Id,
-                Year = car.Year,
-                Manufacturer = car.Manufacturer,
-                Model = car.Model,
-                LicensePlate = car.LicensePlate,
-                PricePerDay = car.PricePerDay
-            };
-
-            return View(deleteVehicleViewModel);
-        }
-
-        [HttpPost("DeleteVehicleConfirm/{id}")]
-        public async Task<IActionResult> DeleteVehicleConfirm(int id)
         {
             var car = await _appDbContext.Cars.Where(car => car.Id == id).SingleOrDefaultAsync();
 
