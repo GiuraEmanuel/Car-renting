@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,7 +91,7 @@ namespace Car_Renting.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(editVehiclePriceViewModel);
             }
 
             var car = await _appDbContext.Cars.Where(c => c.Id == id).SingleOrDefaultAsync();
