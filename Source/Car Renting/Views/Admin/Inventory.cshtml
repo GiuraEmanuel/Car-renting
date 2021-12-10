@@ -59,4 +59,19 @@
 }
 
 
-<a class="btn btn-primary" asp-controller="Admin" asp-action="AddVehicle">Add new car</a>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCarModal">Add</button>
+
+<div class="modal fade" id="@("addCarModal")" tabindex="-1" role="dialog" aria-labelledby="addCarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCarModalLabel">Add</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <partial name="_AddCarModalForm" model="@(new AddVehicleViewModel())"/>
+        </div>
+    </div>
+</div>
+

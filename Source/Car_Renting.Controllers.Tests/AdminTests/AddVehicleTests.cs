@@ -8,7 +8,7 @@ using Shouldly;
 namespace Car_Renting.Controllers.Tests.AdminTests
 {
     [TestClass]
-    public class AddVehiclePostTests
+    public class AddVehicleTests
     {
         [TestMethod]
         public async Task ReturnViewAgainIfModelIsInvalid()
@@ -23,8 +23,8 @@ namespace Car_Renting.Controllers.Tests.AdminTests
             var result = await adminController.AddVehicle(addVehicleVm);
 
             // Assert
-            var viewResult = result.ShouldBeOfType<ViewResult>();
-            viewResult.ViewName.ShouldBe(null);
+            var viewResult = result.ShouldBeOfType<PartialViewResult>();
+            viewResult.ViewName.ShouldBe("_AddCarModalForm");
             viewResult.Model.ShouldBe(addVehicleVm);
         }
 
@@ -49,8 +49,8 @@ namespace Car_Renting.Controllers.Tests.AdminTests
             var result = await adminController.AddVehicle(addVehicleVm);
 
             // Assert
-            var viewResult = result.ShouldBeOfType<ViewResult>();
-            viewResult.ViewName.ShouldBe(null);
+            var viewResult = result.ShouldBeOfType<PartialViewResult>();
+            viewResult.ViewName.ShouldBe("_AddCarModalForm");
             adminController.ModelState.ShouldContain(error => error.Key == "LicensePlate" && error.Value.Errors.Single().ErrorMessage == ErrorMessages.SameLicensePlate);
             viewResult.Model.ShouldBe(addVehicleVm);
         }

@@ -32,19 +32,12 @@ namespace Car_Renting.Controllers
             return View(inventoryViewModel);
         }
 
-        [HttpGet("AddVehicle")]
-        public IActionResult AddVehicle()
-        {
-            var model = new AddVehicleViewModel();
-            return View(model);
-        }
-
         [HttpPost("AddVehicle")]
         public async Task<IActionResult> AddVehicle(AddVehicleViewModel addVehicleViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(addVehicleViewModel);
+                return PartialView("_AddCarModalForm", addVehicleViewModel);
             }
 
             var car = new Car(addVehicleViewModel.Year.Value,
@@ -62,7 +55,7 @@ namespace Car_Renting.Controllers
             catch (DbUpdateException e) when (e.InnerException is SqlException { Number: 2601 } sqlEx && sqlEx.Message.Contains("'IX_Cars_LicensePlate'"))
             {
                 ModelState.AddModelError("LicensePlate", ErrorMessages.SameLicensePlate);
-                return View(addVehicleViewModel);
+                return PartialView("_AddCarModalForm", addVehicleViewModel);
             }
 
             return RedirectToAction(nameof(Inventory));
