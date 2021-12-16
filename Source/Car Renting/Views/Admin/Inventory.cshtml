@@ -27,7 +27,7 @@
                 <td>@car.LicensePlate</td>
                 <td>@car.PricePerDay</td>
                 <td>
-                    <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="EditVehicle" asp-route-id="@car.Id">Edit</a>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="@("#editVehicleModal" + car.Id)">Edit</button>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="@("#deleteModal" + car.Id)">Delete</button>
                 </td>
             </tr>
@@ -56,22 +56,27 @@
             </div>
         </div>
     </div>
-}
 
+    <div class="modal fade" id="@("editVehicleModal" + car.Id)" tabindex="-1" role="dialog" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <partial name="_EditVehicleModalForm" model="@(new EditVehicleViewModel { Id = car.Id,PricePerDay = car.PricePerDay})" />
+            </div>
+        </div>
+    </div>
+}
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCarModal">Add</button>
 
 <div class="modal fade" id="@("addCarModal")" tabindex="-1" role="dialog" aria-labelledby="addCarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addCarModalLabel">Add</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <partial name="_AddCarModalForm" model="@(new AddVehicleViewModel())"/>
+
+            <partial name="_AddCarModalForm" model="@(new AddVehicleViewModel())" />
         </div>
     </div>
 </div>
+
+
+
 

@@ -7,7 +7,7 @@ using Shouldly;
 namespace Car_Renting.Controllers.Tests.AdminTests
 {
     [TestClass]
-    public class EditVehiclePostTests
+    public class EditVehicleTests
     {
         [TestMethod]
         public async Task ReturnViewIfModelIsInvalid()
@@ -24,9 +24,9 @@ namespace Car_Renting.Controllers.Tests.AdminTests
             var result = await adminController.EditVehicle(0, editVehicleVm);
 
             // Assert
-            var viewResult = result.ShouldBeOfType<ViewResult>();
-            viewResult.ViewName.ShouldBe(null);
-            viewResult.Model.ShouldBe(editVehicleVm);
+            var partialViewResult = result.ShouldBeOfType<PartialViewResult>();
+            partialViewResult.ViewName.ShouldBe("_EditVehicleModalForm");
+            partialViewResult.Model.ShouldBe(editVehicleVm);
         }
 
         [TestMethod]
@@ -68,9 +68,9 @@ namespace Car_Renting.Controllers.Tests.AdminTests
             var result = await adminController.EditVehicle(editVehicleVm.Id, editVehicleVm);
 
             // Assert
-            var redirectResult = result.ShouldBeOfType<RedirectToActionResult>();
-            redirectResult.ControllerName.ShouldBe(null);
-            redirectResult.ActionName.ShouldBe("Inventory");
+            var partialViewResult = result.ShouldBeOfType<PartialViewResult>();
+            partialViewResult.ViewName.ShouldBe("_SuccessModalContent");
+            partialViewResult.Model.ShouldBeOfType<SuccessModalContentViewModel>();
             cars[0].PricePerDay.ShouldBe(editVehicleVm.PricePerDay);
         }
     }

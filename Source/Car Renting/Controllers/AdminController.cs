@@ -58,25 +58,7 @@ namespace Car_Renting.Controllers
                 return PartialView("_AddCarModalForm", addVehicleViewModel);
             }
 
-            return RedirectToAction(nameof(Inventory));
-        }
-
-        [HttpGet("EditVehicle/{id}")]
-        public async Task<IActionResult> EditVehicle(int id)
-        {
-            var car = await _appDbContext.Cars.SingleOrDefaultAsync(c => c.Id == id);
-            if (car == null)
-            {
-                return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarDoesNotExist));
-            }
-
-            var vmEditVehicle = new EditVehicleViewModel
-            {
-                Id = car.Id,
-                PricePerDay = car.PricePerDay
-            };
-
-            return View(vmEditVehicle);
+            return PartialView("_SuccessModalContent", new SuccessModalContentViewModel("Car successfully added."));
         }
 
         [HttpPost("EditVehicle/{id}")]
@@ -84,7 +66,7 @@ namespace Car_Renting.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(editVehiclePriceViewModel);
+                return PartialView("_EditVehicleModalForm", editVehiclePriceViewModel);
             }
 
             var car = await _appDbContext.Cars.Where(c => c.Id == id).SingleOrDefaultAsync();
@@ -97,7 +79,7 @@ namespace Car_Renting.Controllers
             car.PricePerDay = editVehiclePriceViewModel.PricePerDay;
             await _appDbContext.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Inventory));
+            return PartialView("_SuccessModalContent", new SuccessModalContentViewModel("Price successfully changed."));
         }
 
         [HttpPost("DeleteVehicle/{id}")]

@@ -78,9 +78,8 @@ namespace Car_Renting.Controllers.Tests.AdminTests
             var result = await adminController.AddVehicle(addVehicleVm);
 
             // Assert
-            var redirectResult = result.ShouldBeOfType<RedirectToActionResult>();
-            redirectResult.ControllerName.ShouldBe(null);
-            redirectResult.ActionName.ShouldBe("Inventory");
+            var redirectResult = result.ShouldBeOfType<PartialViewResult>();
+            redirectResult.Model.ShouldBeOfType<SuccessModalContentViewModel>();
             context.Cars.Count().ShouldBe(cars.Count + 1);
             context.Cars.ShouldContain(car => car.LicensePlate == addVehicleVm.LicensePlate
                                               && car.Manufacturer == addVehicleVm.Manufacturer

@@ -1,0 +1,26 @@
+﻿@model EditVehicleViewModel
+
+<form id="@("editVehicleForm" + Model.Id)" asp-controller="Admin" asp-action="EditVehicle" asp-route-id="@Model.Id" method="post" data-ajax="true"
+      data-ajax-method="post"
+      data-ajax-url="@Url.Action("EditVehicle", "Admin")"
+      data-ajax-mode="replace"
+      data-ajax-update="@("#editVehicleForm" + Model.Id)">
+    <div class="modal-header">
+        <h5 class="modal-title" id="editVehicleModalLabel">Edit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label for="@("PricePerDay" + Model.Id)">Price per day:</label>
+            <input type="number" value="@Model.PricePerDay" step=".01" id="@("PricePerDay" + Model.Id)" name="PricePerDay">
+            <span asp-validation-for="PricePerDay" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <input type="submit" value="Save" class="btn btn-primary">
+    </div>
+</form>
