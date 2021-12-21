@@ -15,27 +15,27 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label for="Year">Year:</label>
-            <input type="number" value="@Model.Year" id="Year" name="Year">
+            <input class="form-control col-5" type="number" value="@Model.Year" id="Year" name="Year">
             <span asp-validation-for="Year" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="Manufacturer">Manufacturer:</label>
-            <input type="text" value="@Model.Manufacturer" id="Manufacturer" name="Manufacturer">
+            <input class="form-control col-5" type="text" value="@Model.Manufacturer" id="Manufacturer" name="Manufacturer">
             <span asp-validation-for="Manufacturer" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="Model">Model:</label>
-            <input type="text" value="@Model.Model" id="Model" name="Model">
+            <input class="form-control col-5" type="text" value="@Model.Model" id="Model" name="Model">
             <span asp-validation-for="Model" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="LicensePlate">License Plate:</label>
-            <input type="text" value="@Model.LicensePlate" id="LicensePlate" name="LicensePlate">
+            <input class="form-control col-5" type="text" value="@Model.LicensePlate" id="LicensePlate" name="LicensePlate">
             <span asp-validation-for="LicensePlate" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="PricePerDay">Price per day:</label>
-            <input type="number" value="@Model.PricePerDay" step=".01" id="PricePerDay" name="PricePerDay">
+            <input class="form-control col-5" type="number" value="@Model.PricePerDay" step=".01" id="PricePerDay" name="PricePerDay">
             <span asp-validation-for="PricePerDay" class="text-danger"></span>
         </div>
     </div>

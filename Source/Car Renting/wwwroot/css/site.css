@@ -2,72 +2,75 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
 
 label {
@@ -77,3 +80,68 @@ label {
 table a.btn-sm {
     width: 70px;
 }
+
+form.date-range-form {
+    border-radius: 20px;
+    border: 2px darkgrey solid;
+    padding: 8px 15px;
+    background: lightgray;
+}
+
+form.date-range-form span {
+    font-size: 20px;
+    font-style: oblique;
+    font-weight: bold;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+form.date-range-form input {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border-width: 1px;
+}
+
+h1 {
+    font-size: 25px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.info-container label {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.bordered-form {
+    border-radius: 5px;
+    border: 1px black solid;
+    background: #F0F0F0FF;
+}
+
+.bordered-form .col-6, .bordered-form .col-12 {
+    padding: 30px;
+}
+
+.bordered-form-header .col-6, .bordered-form-footer .col-6 {
+    padding: 15px;
+}
+
+.bordered-form-header {
+    border-bottom: 1px #AAAAAA solid;
+}
+
+.bordered-form-footer {
+    border-top: 1px #AAAAAA solid;
+    font-size: 20px;
+}
+
+.bordered-form-footer label {
+    display: inline;
+}
+
+.info-container h4 {
+    border-bottom: 1px #AAAAAA solid;
+    padding-bottom: 16px;
+}
+
