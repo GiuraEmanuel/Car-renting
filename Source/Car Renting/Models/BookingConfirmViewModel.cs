@@ -5,6 +5,7 @@ namespace Car_Renting.Models
     public class BookingConfirmViewModel
     {
         public int CarId { get; }
+        public int Year { get;}
         public string Manufacturer { get; }
         public string Model { get; }
         public decimal PricePerDay { get; }
@@ -14,10 +15,11 @@ namespace Car_Renting.Models
         public decimal TotalCost => TotalNumberOfDays * PricePerDay;
 
 
-        public BookingConfirmViewModel(int carId, string manufacturer, string model, decimal pricePerDay,
+        public BookingConfirmViewModel(int carId, int year, string manufacturer, string model, decimal pricePerDay,
             DateTime startDate, DateTime endDate)
         {
             CarId = carId;
+            Year = year;
             Manufacturer = manufacturer;
             Model = model;
             PricePerDay = pricePerDay;

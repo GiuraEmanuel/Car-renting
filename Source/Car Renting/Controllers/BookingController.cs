@@ -57,7 +57,7 @@ namespace Car_Renting.Controllers
                 .Select(booking => new
                 {
                     UserId = booking.UserId,
-                    VM = new BookingDetailsViewModel(booking.Id, booking.StartDate, booking.EndDate, booking.Car.Manufacturer, booking.Car.Model,
+                    VM = new BookingDetailsViewModel(booking.Id, booking.StartDate, booking.EndDate, booking.Car.Year, booking.Car.Manufacturer, booking.Car.Model,
                      booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber,
                      booking.CancelDateTimeUtc, booking.CancelRefundAmount)
                 }).SingleOrDefaultAsync();
@@ -124,7 +124,7 @@ namespace Car_Renting.Controllers
                 return View("ErrorMessage", new ErrorMessageViewModel(ErrorMessages.CarUnavailable + ErrorMessages.StartBookingAgainSuffix));
             }
 
-            var bookingConfirmVM = new BookingConfirmViewModel(car.Id, car.Manufacturer, car.Model, car.PricePerDay, startDate, endDate);
+            var bookingConfirmVM = new BookingConfirmViewModel(car.Id, car.Year, car.Manufacturer, car.Model, car.PricePerDay, startDate, endDate);
             return View(bookingConfirmVM);
         }
 

@@ -6,6 +6,7 @@ namespace Car_Renting.Models
     {
         public DateTime StartDate { get; }
         public DateTime EndDate { get; }
+        public int Year { get;}
         public string Manufacturer { get; }
         public string Model { get; }
         public int TotalNumberOfDays => (EndDate - StartDate).Days;
@@ -24,13 +25,14 @@ namespace Car_Renting.Models
         /// </summary>
         public decimal? CancelRefundAmount { get; }
 
-        public BookingDetailsViewModel(int bookingId, DateTime startDate, DateTime endDate,
+        public BookingDetailsViewModel(int bookingId, DateTime startDate, DateTime endDate, int year,
             string manufacturer, string model, decimal totalCost,
             string firstName, string lastName, string email, string phoneNumber, DateTime? cancelDateTimeUtc, decimal? cancelRefundAmount)
         {
             BookingId = bookingId;
             StartDate = startDate;
             EndDate = endDate;
+            Year = year;
             Manufacturer = manufacturer;
             Model = model;
             TotalCost = totalCost;
