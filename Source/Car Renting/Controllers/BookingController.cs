@@ -20,7 +20,7 @@ namespace Car_Renting.Controllers
     [Route("Bookings")]
     public class BookingController : Controller
     {
-        
+
 
         private readonly AppDbContext _appDbContext;
 
@@ -260,7 +260,7 @@ namespace Car_Renting.Controllers
 
             return await bookingsQuery
                 .Where(b => b.Status == bookingStatus)
-                .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Model, b.Car.Manufacturer, b.TotalCost))
+                .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Year, b.Car.Manufacturer, b.Car.Model, b.TotalCost))
                 .ToListAsync();
         }
     }
