@@ -9,9 +9,7 @@
 <table class="table" style="width:80%">
     <thead class="thead-light">
         <tr>
-            <th>Year</th>
-            <th>Manufacturer</th>
-            <th>Model</th>
+            <th>Car</th>
             <th>License Plate</th>
             <th>Price per day</th>
             <th>Actions</th>
@@ -21,9 +19,7 @@
         @foreach (var car in Model.Cars)
         {
             <tr>
-                <td>@car.Year</td>
-                <td>@car.Manufacturer</td>
-                <td>@car.Model</td>
+                <td>@car.Year @car.Manufacturer @car.Model</td>
                 <td>@car.LicensePlate</td>
                 <td>@car.PricePerDay</td>
                 <td>
