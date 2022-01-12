@@ -15,6 +15,7 @@ namespace Car_Renting.Data
         public BookingStatus Status { get; private set; }
         public DateTime? CancelDateTimeUtc { get; private set; }
         public decimal? CancelRefundAmount { get; private set; }
+        public DateTime CreatedUtc { get; private set; }
 
         public Booking(string userId, int carId,
                 DateTime startDate, DateTime endDate, decimal totalCost)
@@ -25,6 +26,7 @@ namespace Car_Renting.Data
             EndDate = endDate;
             TotalCost = totalCost;
             Status = BookingStatus.Active;
+            CreatedUtc = DateTime.UtcNow;
         }
 
 

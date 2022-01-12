@@ -17,11 +17,11 @@
     <div class="col-6">
         <div class="container bordered-form">
             <div class="row bordered-form-header align-items-center">
-                <div class="col-6">
+                <div class="col-8">
                     <h4 class="mb-0">@Model.Year @Model.Manufacturer @Model.Model</h4>
                 </div>
-                <div class="col-6 text-right">
-                    <span>Booking #@Model.BookingId <br> string[date] </span>
+                <div class="col-4 text-right">
+                    <span>Booking #@Model.BookingId <br> @Model.CreatedLocal.ToShortDateString() </span>
                 </div>
             </div>
             <div class="row">

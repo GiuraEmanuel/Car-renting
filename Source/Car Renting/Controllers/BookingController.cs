@@ -59,7 +59,7 @@ namespace Car_Renting.Controllers
                     UserId = booking.UserId,
                     VM = new BookingDetailsViewModel(booking.Id, booking.StartDate, booking.EndDate, booking.Car.Year, booking.Car.Manufacturer, booking.Car.Model,
                      booking.TotalCost, booking.User.FirstName, booking.User.LastName, booking.User.Email, booking.User.PhoneNumber,
-                     booking.CancelDateTimeUtc, booking.CancelRefundAmount)
+                     booking.CancelDateTimeUtc, booking.CancelRefundAmount, booking.CreatedUtc)
                 }).SingleOrDefaultAsync();
 
             if (bookingInfo == null)

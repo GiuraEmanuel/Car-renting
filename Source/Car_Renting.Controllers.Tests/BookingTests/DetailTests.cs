@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
+using System;
 using System.Threading.Tasks;
 
 namespace Car_Renting.Controllers.Tests.BookingTests
@@ -13,6 +14,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
         public async Task UserChecksHisOwnBookingDetails()
         {
             // Arrange
+            var seedStartTime = DateTime.Now;
             using var context = DbSetup.Initialize();
             var userManager = MockUserManager.Create(context);
             var (admin, user) = DbSetup.SeedUsers(userManager);
@@ -38,6 +40,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             model.RefundAmountIfCancelling.ShouldBe(0);
             model.Email.ShouldBe("jason.bourne@gmail.com");
             model.Model.ShouldBe(cars[1].Model);
+            model.CreatedLocal.ShouldBeInRange(seedStartTime, DateTime.Now);
         }
 
         [TestMethod]
@@ -151,5 +154,7 @@ namespace Car_Renting.Controllers.Tests.BookingTests
             var model = viewResult.Model.ShouldBeOfType<ErrorMessageViewModel>();
             model.Message.ShouldBe(ErrorMessages.BookingNotFound);
         }
+
+
     }
 }

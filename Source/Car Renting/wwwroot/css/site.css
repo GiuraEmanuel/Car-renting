@@ -123,8 +123,12 @@ h1 {
     padding: 30px;
 }
 
-.bordered-form-header .col-6, .bordered-form-footer .col-6 {
-    padding: 15px;
+.bordered-form-header .col-4,
+.bordered-form-header .col-6,
+.bordered-form-header .col-8, 
+.bordered-form-footer .col-6
+{
+padding: 15px;
 }
 
 .bordered-form-header {
@@ -144,4 +148,6 @@ h1 {
     border-bottom: 1px #AAAAAA solid;
     padding-bottom: 16px;
 }
+
+
 

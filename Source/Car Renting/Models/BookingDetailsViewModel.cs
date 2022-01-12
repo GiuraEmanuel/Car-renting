@@ -15,6 +15,8 @@ namespace Car_Renting.Models
         public string Email { get; }
         public string PhoneNumber { get; }
         public int BookingId { get; }
+        public DateTime CreatedLocal { get;}
+
         /// <summary>
         /// The amount that that will be refunded if the user cancels the booking
         /// </summary>
@@ -27,7 +29,7 @@ namespace Car_Renting.Models
 
         public BookingDetailsViewModel(int bookingId, DateTime startDate, DateTime endDate, int year,
             string manufacturer, string model, decimal totalCost,
-            string firstName, string lastName, string email, string phoneNumber, DateTime? cancelDateTimeUtc, decimal? cancelRefundAmount)
+            string firstName, string lastName, string email, string phoneNumber, DateTime? cancelDateTimeUtc, decimal? cancelRefundAmount, DateTime createdUtc)
         {
             BookingId = bookingId;
             StartDate = startDate;
@@ -41,6 +43,8 @@ namespace Car_Renting.Models
             PhoneNumber = phoneNumber;
             CancelDateTimeLocal = cancelDateTimeUtc?.ToLocalTime();
             CancelRefundAmount = cancelRefundAmount;
+            CreatedLocal = createdUtc.ToLocalTime();
+
 
             if (CancelRefundAmount != null)
             {
