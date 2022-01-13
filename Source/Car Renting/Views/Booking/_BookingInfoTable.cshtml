@@ -32,9 +32,9 @@
                 <td>@booking.StartDate.ToShortDateString()</td>
                 <td>@booking.NumberOfDays</td>
                 <td>@booking.Year @booking.Manufacturer @booking.Model</td>
-                <td>@booking.TotalCost</td>
+                <td>$@booking.TotalCost</td>
                 <td>
-                    <a class="btn btn-sm btn-outline-primary" asp-controller="Booking" asp-action="Detail" asp-route-id="@booking.Id">View</a>
+                    <a class="btn btn-primary" asp-controller="Booking" asp-action="Detail" asp-route-id="@booking.Id">View</a>
                 </td>
             </tr>
         }

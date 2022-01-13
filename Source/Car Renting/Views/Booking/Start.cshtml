@@ -17,12 +17,6 @@
                 <input type="date" value="@Model.EndDate.ToString("yyyy-MM-dd")" id="EndDate" name="EndDate" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")">
                 <input class="btn-primary mx-2" type="submit" value="Search">
             </div>
-            @if (Model.ErrorMessage != null)
-            {
-                <div class="text-danger">
-                    <p>@Model.ErrorMessage</p>
-                </div>
-            }
         </form>
     </div>
 </div>
@@ -48,7 +42,7 @@
                                 <td>@car.Year  @car.Manufacturer  @car.Model</td>
                                 <td>@car.PricePerDay.ToString("C") per day</td>
                                 <td>
-                                    <a class="btn btn-sm btn-outline-primary w-auto" asp-controller="Booking" asp-action="Confirm" asp-route-carId="@car.Id" asp-route-StartDate="@Model.StartDate.ToString("yyyy-MM-dd")" asp-route-EndDate="@Model.EndDate.ToString("yyyy-MM-dd")">Book Now</a>
+                                    <a class="btn btn-primary w-auto" asp-controller="Booking" asp-action="Confirm" asp-route-carId="@car.Id" asp-route-StartDate="@Model.StartDate.ToString("yyyy-MM-dd")" asp-route-EndDate="@Model.EndDate.ToString("yyyy-MM-dd")">Book Now</a>
                                 </td>
                             </tr>
                         }
@@ -57,8 +51,12 @@
             }
             else
             {
-                <div class="alert alert-danger" role="alert">
-                    There are no cars available in this search range.
+                <div class="row align-items-center justify-content-center">
+                    <div class="col-6">
+                        <div class="alert alert-danger" role="alert">
+                            @Model.ErrorMessage
+                        </div>
+                    </div>
                 </div>
             }
         </div>

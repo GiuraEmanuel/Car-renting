@@ -129,15 +129,21 @@ h1 {
 .bordered-form-footer .col-6
 {
 padding: 15px;
+padding-right: 0;
+padding-left: 0;
 }
 
 .bordered-form-header {
-    border-bottom: 1px #AAAAAA solid;
+    border-bottom: 1px #373333 solid;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 .bordered-form-footer {
-    border-top: 1px #AAAAAA solid;
+    border-top: 1px #373333 solid;
     font-size: 20px;
+    margin-right: 0;
+    margin-left: 0;
 }
 
 .bordered-form-footer label {

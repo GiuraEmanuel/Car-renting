@@ -21,10 +21,10 @@
             <tr>
                 <td>@car.Year @car.Manufacturer @car.Model</td>
                 <td>@car.LicensePlate</td>
-                <td>@car.PricePerDay</td>
+                <td>$@car.PricePerDay</td>
                 <td>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="@("#editVehicleModal" + car.Id)">Edit</button>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="@("#deleteModal" + car.Id)">Delete</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="@("#deleteModal" + car.Id)">Delete</button>
                 </td>
             </tr>
         }
@@ -46,8 +46,8 @@
                     Are you sure you want to delete the @car.Year @car.Manufacturer @car.Model with license plate @car.LicensePlate?
                 </div>
                 <form class="modal-footer" asp-controller="Admin" asp-action="DeleteVehicle" method="post" asp-route-id="@car.Id">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <input type="submit" value="Yes" class="btn btn-primary">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <input type="submit" value="Delete" class="btn btn-danger">
                 </form>
             </div>
         </div>
@@ -67,7 +67,6 @@
 <div class="modal fade" id="@("addCarModal")" tabindex="-1" role="dialog" aria-labelledby="addCarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-
             <partial name="_AddCarModalForm" model="@(new AddVehicleViewModel())" />
         </div>
     </div>
