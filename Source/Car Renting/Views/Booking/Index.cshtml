@@ -5,7 +5,11 @@
     ViewBag.IsAdmin = Model.IsAdmin;
 }
 
-<a class="btn btn-primary" style="float: right" asp-controller="Booking" asp-action="Cancellations">View Cancelled Bookings</a>
+@if (Model.HasCancelledBookings)
+{
+    <a class="btn btn-primary" style="float: right" asp-controller="Booking" asp-action="Cancellations">View Cancelled Bookings</a>
+}
+
 <h1>@ViewBag.Title</h1>
 
 @if (Model.CurrentBookings.Count == 0 && Model.UpcomingBookings.Count == 0 && Model.PastBookings.Count == 0)

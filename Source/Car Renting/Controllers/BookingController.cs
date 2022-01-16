@@ -20,8 +20,6 @@ namespace Car_Renting.Controllers
     [Route("Bookings")]
     public class BookingController : Controller
     {
-
-
         private readonly AppDbContext _appDbContext;
 
         private readonly UserManager<User> _userManager;
@@ -41,9 +39,11 @@ namespace Car_Renting.Controllers
 
             var isAdmin = await CheckIfAdmin(user);
 
-            var bookings = await GetBookingInfosAsync(user.Id, isAdmin, BookingStatus.Active);
+            var bookings = await GetBookingInfos(user.Id, isAdmin, BookingStatus.Active).ToListAsync();
 
-            var model = new BookingIndexViewModel(bookings, isAdmin);
+            bool hasCancelledBookings = await GetBookingInfos(user.Id, isAdmin, BookingStatus.Cancelled).AnyAsync();
+
+            var model = new BookingIndexViewModel(bookings, isAdmin, hasCancelledBookings);
             return View(model);
         }
 
@@ -196,7 +196,7 @@ namespace Car_Renting.Controllers
 
             var isAdmin = await CheckIfAdmin(user);
 
-            var bookings = await GetBookingInfosAsync(user.Id, isAdmin, BookingStatus.Cancelled);
+            var bookings = await GetBookingInfos(user.Id, isAdmin, BookingStatus.Cancelled).ToListAsync();
 
             var model = new BookingCancellationsViewModel(bookings, isAdmin);
             return View(model);
@@ -249,7 +249,7 @@ namespace Car_Renting.Controllers
 
         private Task<bool> CheckIfAdmin(User user) => _userManager.IsInRoleAsync(user, "Admin");
 
-        private async Task<List<BookingInfo>> GetBookingInfosAsync(string userId, bool isAdmin, BookingStatus bookingStatus)
+        private IQueryable<BookingInfo> GetBookingInfos(string userId, bool isAdmin, BookingStatus bookingStatus)
         {
             IQueryable<Booking> bookingsQuery = _appDbContext.Bookings;
 
@@ -258,10 +258,9 @@ namespace Car_Renting.Controllers
                 bookingsQuery = bookingsQuery.Where(b => b.UserId == userId);
             }
 
-            return await bookingsQuery
+            return bookingsQuery
                 .Where(b => b.Status == bookingStatus)
-                .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Year, b.Car.Manufacturer, b.Car.Model, b.TotalCost))
-                .ToListAsync();
+                .Select(b => new BookingInfo(b.Id, b.User.Email, b.StartDate, b.EndDate, b.Car.Year, b.Car.Manufacturer, b.Car.Model, b.TotalCost));
         }
     }
 }
