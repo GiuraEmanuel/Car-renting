@@ -1,5 +1,4 @@
-﻿using Car_Renting.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Car_Renting.Models
@@ -9,9 +8,10 @@ namespace Car_Renting.Models
         public List<BookingInfo> CurrentBookings { get; } = new();
         public List<BookingInfo> PastBookings { get; } = new();
         public List<BookingInfo> UpcomingBookings { get; } = new();
+        public bool HasCancelledBookings { get; }
         public bool IsAdmin { get; }
 
-        public BookingIndexViewModel(IEnumerable<BookingInfo> bookings, bool isAdmin)
+        public BookingIndexViewModel(IEnumerable<BookingInfo> bookings, bool isAdmin, bool hasCancelledBookings)
         {
             foreach (var booking in bookings)
             {
@@ -28,34 +28,8 @@ namespace Car_Renting.Models
                     CurrentBookings.Add(booking);
                 }
             }
-
             IsAdmin = isAdmin;
-        }
-
-        public class BookingInfo
-        {
-            public int Id { get; }
-            public string Email { get; }
-            public DateTime StartDate { get; }
-            public DateTime EndDate { get; set; }
-            public int NumberOfDays => (EndDate - StartDate).Days;
-            public int Year { get; }
-            public string Manufacturer { get; }
-            public string Model { get; }
-            public decimal TotalCost { get; }
-
-            public BookingInfo(int id, string email, DateTime startDate, DateTime endDate,
-                int year, string manufacturer, string model, decimal totalCost)
-            {
-                Id = id;
-                Email = email;
-                StartDate = startDate;
-                EndDate = endDate;
-                Year = year;
-                Manufacturer = manufacturer;
-                Model = model;
-                TotalCost = totalCost;
-            }
+            HasCancelledBookings = hasCancelledBookings;
         }
     }
 }
