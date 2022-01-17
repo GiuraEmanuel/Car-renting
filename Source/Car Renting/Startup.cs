@@ -1,5 +1,6 @@
 using Car_Renting.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
 
 namespace Car_Renting
 {
@@ -29,6 +32,16 @@ namespace Car_Renting
             services.AddDefaultIdentity<User>()
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<AppDbContext>();
+
+            var assemblyFile = new FileInfo(typeof(Startup).Assembly.Location);
+            var wwwrootDir = assemblyFile.Directory!;
+            var hostingRootDir = wwwrootDir.Parent!;
+            var dataDir = hostingRootDir.CreateSubdirectory("data");
+            var keyDataDir = dataDir.CreateSubdirectory("keys");
+
+            services.AddDataProtection()
+                    .PersistKeysToFileSystem(keyDataDir)
+                    .SetDefaultKeyLifetime(TimeSpan.FromDays(9999));
 
             services.AddRazorPages();
 
