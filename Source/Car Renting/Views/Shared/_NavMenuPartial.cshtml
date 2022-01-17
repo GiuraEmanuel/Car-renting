@@ -5,7 +5,6 @@
 
 
 <ul class="navbar-nav flex-grow-1">
-
 </ul>
 
 <ul class="navbar-nav">
@@ -17,13 +16,19 @@
     </li>
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Booking" asp-action="Index">My Bookings</a>
-        </li>
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Inventory">Inventory</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Booking" asp-action="Index">Bookings</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Booking" asp-action="Index">My Bookings</a>
             </li>
         }
         <li class="nav-item">

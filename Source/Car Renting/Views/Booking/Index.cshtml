@@ -1,7 +1,15 @@
 ﻿@model BookingIndexViewModel
 
 @{
-    ViewBag.Title = "User Bookings";
+    if (Model.IsAdmin)
+    {
+        ViewBag.Title = "Bookings";
+    }
+    else
+    {
+        ViewBag.Title = "My Bookings";
+    }
+
     ViewBag.IsAdmin = Model.IsAdmin;
 }
 
