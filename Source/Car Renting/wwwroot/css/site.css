@@ -155,5 +155,8 @@ padding-left: 0;
     padding-bottom: 16px;
 }
 
+.btn-dark-transparent {
+    background-color: #00000099
+}
 
 
