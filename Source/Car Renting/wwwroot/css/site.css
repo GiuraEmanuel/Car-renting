@@ -125,12 +125,11 @@ h1 {
 
 .bordered-form-header .col-4,
 .bordered-form-header .col-6,
-.bordered-form-header .col-8, 
-.bordered-form-footer .col-6
-{
-padding: 15px;
-padding-right: 0;
-padding-left: 0;
+.bordered-form-header .col-8,
+.bordered-form-footer .col-6 {
+    padding: 15px;
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .bordered-form-header {
@@ -159,4 +158,14 @@ padding-left: 0;
     background-color: #00000099
 }
 
+.banner {
+    margin: -15px;
+    background-image: url('/images/mercedes.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom center;
+}
 
+.mask {
+    background-color: rgba(0, 0, 0, 0.6);
+}
