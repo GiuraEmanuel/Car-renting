@@ -4,17 +4,20 @@
     ViewBag.Title = "Booking Details";
 }
 
-<h1 class="text-center">@ViewBag.Title</h1>
+@section Header
+{
+    <partial name="_Banner" />
+}
 
 @if (Model.CancelDateTimeLocal != null)
 {
-<div class="row justify-content-center">
-    <div class="col-auto">
-        <div class="alert alert-danger" role="alert">
-            This booking was cancelled on @Model.CancelDateTimeLocal.Value.ToShortDateString() at @Model.CancelDateTimeLocal.Value.ToShortTimeString() and a refund of $@Model.CancelRefundAmount was issued.
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div class="alert alert-danger" role="alert">
+                This booking was cancelled on @Model.CancelDateTimeLocal.Value.ToShortDateString() at @Model.CancelDateTimeLocal.Value.ToShortTimeString() and a refund of $@Model.CancelRefundAmount was issued.
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div class="row justify-content-center">

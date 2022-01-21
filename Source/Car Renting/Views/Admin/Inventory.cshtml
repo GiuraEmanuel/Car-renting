@@ -4,7 +4,10 @@
     ViewBag.Title = "Car Inventory";
 }
 
-<h1>@ViewBag.Title</h1>
+@section Header
+{
+    <partial name="_Banner" />
+}
 
 <table class="table" style="width:80%">
     <thead class="thead-light">

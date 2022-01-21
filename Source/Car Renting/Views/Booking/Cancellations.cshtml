@@ -5,7 +5,10 @@
     ViewBag.IsAdmin = true; //Model.IsAdmin;
 }
 
-<h1>@ViewBag.Title</h1>
+@section Header
+{
+    <partial name="_Banner" />
+}
 
 @if (Model.Bookings.Count == 0)
 {
@@ -13,6 +16,6 @@
 }
 else
 {
-    <partial name="_BookingInfoTable" model="@Model.Bookings"/>
+    <partial name="_BookingInfoTable" model="@Model.Bookings" />
 }
 

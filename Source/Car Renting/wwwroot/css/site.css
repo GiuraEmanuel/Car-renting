@@ -102,12 +102,6 @@ form.date-range-form input {
     border-width: 1px;
 }
 
-h1 {
-    font-size: 25px;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
-
 .info-container label {
     font-weight: bold;
     margin-bottom: 0;
@@ -159,13 +153,26 @@ h1 {
 }
 
 .banner {
-    margin: -15px;
+    margin-top: -15px;
     background-image: url('/images/mercedes.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom center;
 }
 
-.mask {
+.banner .mask {
     background-color: rgba(0, 0, 0, 0.6);
+    min-height: 100vh;
 }
+
+.banner.banner-sm {
+    background-image: url('/images/content-page-car.jpg');
+    margin-bottom: 20px;
+    background-position: center center;
+}
+
+.banner.banner-sm .mask {
+    min-height: 0;
+}
+
+
