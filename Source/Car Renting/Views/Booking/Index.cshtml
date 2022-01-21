@@ -20,30 +20,36 @@
 
 @if (Model.HasCancelledBookings)
 {
-    <a class="btn btn-primary" style="float: right" asp-controller="Booking" asp-action="Cancellations">View Cancelled Bookings</a>
+<a class="btn btn-primary" style="float: right" asp-controller="Booking" asp-action="Cancellations">View Cancelled Bookings</a>
+<div style="clear: both"></div>
 }
 
 @if (Model.CurrentBookings.Count == 0 && Model.UpcomingBookings.Count == 0 && Model.PastBookings.Count == 0)
 {
-    <p>No bookings found.</p>
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div class="alert alert-danger px-5" role="alert">
+            No bookings found.
+        </div>
+    </div>
+</div>
 }
 
 @if (Model.CurrentBookings.Count > 0)
 {
-    <h3>Current Bookings</h3>
-    <partial name="_BookingInfoTable" model="@Model.CurrentBookings" />
+<h3>Current Bookings</h3>
+<partial name="_BookingInfoTable" model="@Model.CurrentBookings" />
 }
 
 @if (Model.UpcomingBookings.Count > 0)
 {
-    <h3>Upcoming bookings</h3>
-    <partial name="_BookingInfoTable" model="@Model.UpcomingBookings" />
+<h3>Upcoming bookings</h3>
+<partial name="_BookingInfoTable" model="@Model.UpcomingBookings" />
 }
 
 @if (Model.PastBookings.Count > 0)
 {
-    <h3>Past bookings</h3>
-    <partial name="_BookingInfoTable" model="@Model.PastBookings" />
+<h3>Past bookings</h3>
+<partial name="_BookingInfoTable" model="@Model.PastBookings" />
 }
-
 

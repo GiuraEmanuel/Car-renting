@@ -39,7 +39,12 @@ namespace Car_Renting.Controllers
 
             var isAdmin = await CheckIfAdmin(user);
 
+#if TEST_NO_DATA
+            var bookings = new List<BookingInfo>();
+#else
+
             var bookings = await GetBookingInfos(user.Id, isAdmin, BookingStatus.Active).ToListAsync();
+#endif
 
             bool hasCancelledBookings = await GetBookingInfos(user.Id, isAdmin, BookingStatus.Cancelled).AnyAsync();
 
