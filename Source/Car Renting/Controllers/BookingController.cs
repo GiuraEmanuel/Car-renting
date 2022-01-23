@@ -1,8 +1,6 @@
 ﻿using Car_Renting.Data;
 using Car_Renting.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static Car_Renting.Models.BookingIndexViewModel;
 
 namespace Car_Renting.Controllers
 {
