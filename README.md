@@ -1,1 +1,1 @@
-Link for my basic website : https://carrental.emanuel-giura.com
+Website link : https://carrental.emanuel-giura.com
